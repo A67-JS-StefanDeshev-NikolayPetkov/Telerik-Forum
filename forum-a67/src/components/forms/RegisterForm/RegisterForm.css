@@ -1,0 +1,48 @@
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.additional-links {
+  display: flex;
+  width: 100%;
+  align-items: start;
+  flex-direction: column;
+}
+
+/* Heading */
+.register-container h2 {
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Form Input Fields */
+.register-input {
+  width: 320px;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+.login-input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+/* Forgot Password Link */
+.redirection-link {
+  font-size: 14px;
+}
+
+.redirection-link a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.redirection-link a:hover {
+  text-decoration: underline;
+}
