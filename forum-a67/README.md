@@ -1,4 +1,4 @@
-# React + Vite
+# BGMount Forum
 
 BGMount forum project. A react based forum on the topic of mountains in Bulgaria.
 

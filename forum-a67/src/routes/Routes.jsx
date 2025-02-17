@@ -6,6 +6,8 @@ import { Navigate } from "react-router-dom";
 
 //View imports
 import Home from "../views/Home/Home";
+import Login from "../views/Login/Login";
+import Register from "../views/Register/Register";
 
 function NavigationRoutes() {
   return (
@@ -21,17 +23,17 @@ function NavigationRoutes() {
       ></Route>
       <Route
         path="/home"
-        element={Home}
+        element={<Home />}
       ></Route>
-      {/* <Route
+      <Route
         path="/login"
-        element={Login}
+        element={<Login />}
       ></Route>
       <Route
         path="/register"
-        element={Login}
+        element={<Register />}
       ></Route>
-      <Route
+      {/*<Route
         path="/posts"
         element={Login}
       ></Route>

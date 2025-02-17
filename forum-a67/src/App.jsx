@@ -16,8 +16,9 @@ function App() {
 
   return (
     <>
-      <NavigationRoutes></NavigationRoutes>
       <Header></Header>
+
+      <NavigationRoutes></NavigationRoutes>
     </>
   );
 }

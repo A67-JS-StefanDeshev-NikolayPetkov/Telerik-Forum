@@ -9,7 +9,7 @@ function Header() {
     <div className="header">
       <NavLink to="/home">
         <img
-          src=""
+          src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
           className="logo"
           alt="BGMount"
         ></img>

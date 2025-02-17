@@ -41,4 +41,10 @@ select {
 #root {
   width: 1200px;
   margin: 0 auto;
+  margin-top: 104px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10rem;
 }
