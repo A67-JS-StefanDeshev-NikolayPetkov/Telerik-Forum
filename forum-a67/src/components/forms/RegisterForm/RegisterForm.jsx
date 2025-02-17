@@ -7,19 +7,7 @@ import { Link } from "react-router-dom";
 //Component imports
 import SubmitButton from "../../SubmitButton/SubmitButton";
 
-function RegisterForm({
-  firstName,
-  lastName,
-  number,
-  password,
-  username,
-  setFirstName,
-  setLastName,
-  setNumber,
-  setPassword,
-  setUsername,
-  handleSubmit,
-}) {
+function RegisterForm({ handleInput, handleSubmit, formData }) {
   return (
     <form
       className="register-form"
@@ -36,9 +24,9 @@ function RegisterForm({
           name="firstName"
           required
           placeholder="Enter your first name"
-          value={firstName}
+          value={formData.firstName}
           onChange={(e) => {
-            setFirstName(e.target.value);
+            handleInput(e.target);
           }}
         />
       </div>
@@ -52,9 +40,9 @@ function RegisterForm({
           name="lastName"
           required
           placeholder="Enter your last name"
-          value={lastName}
+          value={formData.lastName}
           onChange={(e) => {
-            setLastName(e.target.value);
+            handleInput(e.target);
           }}
         />
       </div>
@@ -68,9 +56,9 @@ function RegisterForm({
           name="username"
           required
           placeholder="Enter your username or email"
-          value={username}
+          value={formData.username}
           onChange={(e) => {
-            setUsername(e.target.value);
+            handleInput(e.target);
           }}
         />
       </div>
@@ -83,9 +71,9 @@ function RegisterForm({
           name="password"
           required
           placeholder="Enter your password"
-          value={password}
+          value={formData.password}
           onChange={(e) => {
-            setPassword(e.target.value);
+            handleInput(e.target);
           }}
         />
       </div>
@@ -97,11 +85,10 @@ function RegisterForm({
           type="text"
           id="number"
           name="number"
-          required
           placeholder="Enter your number"
-          value={number}
+          value={formData.number}
           onChange={(e) => {
-            setNumber(e.target.value);
+            handleInput(e.target);
           }}
         />
       </div>

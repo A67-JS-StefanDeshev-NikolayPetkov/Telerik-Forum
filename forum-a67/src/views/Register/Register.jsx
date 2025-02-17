@@ -3,44 +3,58 @@ import "./Register.css";
 
 //Dependency imports
 import { useState } from "react";
+import { useEffect } from "react";
 
 //Component imports
 import RegisterFrom from "../../components/forms/RegisterForm/RegisterForm";
 import FormContainer from "../../components/forms/FormContainer/FormContainer";
+import RegistrationSuccess from "../../components/informational/RegistrationSuccess/RegistrationSuccess";
+import { Form } from "react-router-dom";
 
 function Register() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [number, setNumber] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    number: "",
+    username: "",
+    password: "",
+  });
+
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+
+  useEffect(() => {
+    return setRegistrationSuccess(false);
+  }, []);
+
+  const validate = function () {
+    const errors = {};
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleInput = function (eventTarget) {
+    const newFormData = { ...formData };
+    newFormData[eventTarget.name] = eventTarget.value;
+    setFormData(newFormData);
+  };
 
   const handleSubmit = function (e) {
     e.preventDefault();
-    console.log(username);
-    console.log(password);
-    console.log(firstName);
-    console.log(lastName);
-    console.log(number);
+    if (validate()) {
+      setRegistrationSuccess(true);
+    }
   };
 
-  const props = {
-    username: username,
-    password: password,
-    firstName: firstName,
-    lastName,
-    number,
-    setPassword: setPassword,
-    setUsername,
-    setFirstName,
-    setLastName,
-    setNumber,
-    handleSubmit,
-  };
-
-  return (
+  return !registrationSuccess ? (
     <FormContainer>
-      <RegisterFrom {...props}></RegisterFrom>
+      <RegisterFrom
+        handleSubmit={handleSubmit}
+        handleInput={handleInput}
+        formData={formData}
+      ></RegisterFrom>
+    </FormContainer>
+  ) : (
+    <FormContainer>
+      <RegistrationSuccess></RegistrationSuccess>
     </FormContainer>
   );
 }

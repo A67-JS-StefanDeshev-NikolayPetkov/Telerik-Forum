@@ -7,13 +7,7 @@ import { Link } from "react-router-dom";
 //Component imports
 import SubmitButton from "../../SubmitButton/SubmitButton";
 
-function LoginForm({
-  password,
-  username,
-  setPassword,
-  setUsername,
-  handleSubmit,
-}) {
+function LoginForm({ formData, handleInput, handleSubmit }) {
   return (
     <form
       className="login-form"
@@ -30,9 +24,9 @@ function LoginForm({
           name="username"
           required
           placeholder="Enter your username or email"
-          value={username}
+          value={formData.username}
           onChange={(e) => {
-            setUsername(e.target.value);
+            handleInput(e.target);
           }}
         />
       </div>
@@ -45,9 +39,9 @@ function LoginForm({
           name="password"
           required
           placeholder="Enter your password"
-          value={password}
+          value={formData.password}
           onChange={(e) => {
-            setPassword(e.target.value);
+            handleInput(e.target);
           }}
         />
       </div>

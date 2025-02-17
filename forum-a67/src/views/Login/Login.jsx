@@ -9,26 +9,30 @@ import LoginForm from "../../components/forms/LoginForm/LoginForm";
 import FormContainer from "../../components/forms/FormContainer/FormContainer";
 
 function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+
+  const handleInput = function (eventTarget) {
+    const newFormData = { ...formData };
+    newFormData[eventTarget.name] = eventTarget.value;
+    setFormData(newFormData);
+  };
 
   const handleSubmit = function (e) {
     e.preventDefault();
-    console.log(username);
-    console.log(password);
-  };
-
-  const props = {
-    username,
-    password,
-    setPassword,
-    setUsername,
-    handleSubmit,
+    console.log(formData.username);
+    console.log(formData.password);
   };
 
   return (
     <FormContainer>
-      <LoginForm {...props}></LoginForm>
+      <LoginForm
+        formData={formData}
+        handleInput={handleInput}
+        handleSubmit={handleSubmit}
+      ></LoginForm>
     </FormContainer>
   );
 }
