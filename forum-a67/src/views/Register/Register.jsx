@@ -2,8 +2,7 @@
 import "./Register.css";
 
 //Dependency imports
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 //Component imports
@@ -18,6 +17,13 @@ import {
   emailRegex,
   passwordRegex,
 } from "../../constants/regex";
+
+//Services
+import { AppContext } from "../../context/AppContext";
+import { getUserByHandle } from "../../services/users.service";
+import { registerUser } from "../../services/auth.service";
+import { createUserHandle } from "../../services/users.service";
+
 function Register() {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -30,6 +36,7 @@ function Register() {
 
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [errors, setErrors] = useState({});
+  const { setContext } = useContext(AppContext);
 
   useEffect(() => {
     return setRegistrationSuccess(false);
@@ -80,16 +87,48 @@ function Register() {
     e.preventDefault();
     console.log(formData);
     if (validate()) {
-      setErrors({});
-      setFormData({
-        firstName: "",
-        lastName: "",
-        number: "",
-        username: "",
-        email: "",
-        password: "",
-      });
-      setRegistrationSuccess(true);
+      console.log(formData.username);
+
+      getUserByHandle(formData.username)
+        .then((snapshot) => {
+          console.log(snapshot);
+          if (snapshot.exists()) {
+            throw new Error(
+              `Username @${formData.username} has already been taken!`
+            );
+          }
+
+          return registerUser(formData.email, formData.password);
+        })
+        .then((credentials) => {
+          return createUserHandle(
+            formData.username,
+            credentials.user.uid,
+            credentials.user.email,
+            formData.firstName,
+            formData.lastName,
+            formData.number
+          );
+        })
+        .then(() => {
+          setErrors({});
+
+          setFormData({
+            firstName: "",
+            lastName: "",
+            number: "",
+            username: "",
+            email: "",
+            password: "",
+          });
+
+          setRegistrationSuccess(true);
+        })
+        .catch((e) => {
+          console.log(e.message);
+          console.log(errors);
+          setErrors({ ...errors, message: e.message });
+        });
     }
   };
 

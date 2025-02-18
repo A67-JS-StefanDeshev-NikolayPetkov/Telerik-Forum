@@ -5,18 +5,36 @@ import "react-phone-input-2/lib/style.css";
 //Dependency imports
 import { Link } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
+import { useRef, useEffect } from "react";
 
 //Component imports
 import SubmitButton from "../../SubmitButton/SubmitButton";
 import FieldError from "../FieldError/FieldError";
 
 function RegisterForm({ handleInput, handleSubmit, formData, errors }) {
+  const paragraphRef = useRef(null);
+
+  useEffect(() => {
+    if (errors.message) paragraphRef.current.focus();
+  }, [errors.message]);
+
   return (
     <form
       className="register-form"
       onSubmit={handleSubmit}
     >
       <h2>Register</h2>
+
+      {errors.message && (
+        <div autoFocus>
+          <p
+            ref={paragraphRef}
+            tabIndex={-1}
+          >
+            {errors.message}
+          </p>
+        </div>
+      )}
 
       <div>
         <label htmlFor="firstName">First Name</label>
