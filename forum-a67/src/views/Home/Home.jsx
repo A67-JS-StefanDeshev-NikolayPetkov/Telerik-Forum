@@ -1,10 +1,12 @@
-import WelcomeSection from '../../components/WelcomeSection/WelcomeSection';
-import './Home.css';
+import WelcomeSection from "../../components/WelcomeSection/WelcomeSection";
+import "./Home.css";
 
 function Home() {
-  return <>
-    <WelcomeSection />
-  </>;
+  return (
+    <div className="home-container">
+      <WelcomeSection />
+    </div>
+  );
 }
 
 export default Home;

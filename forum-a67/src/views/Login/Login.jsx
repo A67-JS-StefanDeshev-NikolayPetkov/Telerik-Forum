@@ -6,7 +6,7 @@ import { useState } from "react";
 
 //Component imports
 import LoginForm from "../../components/forms/LoginForm/LoginForm";
-import FormContainer from "../../components/forms/FormContainer/FormContainer";
+import StandardCard from "../../components/containers/StandardCard/StandardCard";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -27,13 +27,13 @@ function Login() {
   };
 
   return (
-    <FormContainer>
+    <StandardCard>
       <LoginForm
         formData={formData}
         handleInput={handleInput}
         handleSubmit={handleSubmit}
       ></LoginForm>
-    </FormContainer>
+    </StandardCard>
   );
 }
 
