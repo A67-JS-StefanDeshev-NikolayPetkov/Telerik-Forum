@@ -1,5 +1,10 @@
+import WelcomeSection from '../../components/WelcomeSection/WelcomeSection';
+import './Home.css';
+
 function Home() {
-  return <></>;
+  return <>
+    <WelcomeSection />
+  </>;
 }
 
 export default Home;
