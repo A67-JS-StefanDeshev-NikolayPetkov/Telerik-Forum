@@ -2,7 +2,7 @@
 import "./Register.css";
 
 //Dependency imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 //Component imports
@@ -25,6 +25,7 @@ import { registerUser } from "../../services/auth.service";
 import { createUserHandle } from "../../services/users.service";
 
 function Register() {
+  const { onLogout } = useContext(AppContext);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -86,7 +87,6 @@ function Register() {
     e.preventDefault();
     console.log(formData);
     if (validate()) {
-
       getUserByHandle(formData.username)
         .then((snapshot) => {
           console.log(snapshot);
@@ -96,7 +96,11 @@ function Register() {
             );
           }
 
-          return registerUser(formData.email, formData.password, formData.username);
+          return registerUser(
+            formData.email,
+            formData.password,
+            formData.username
+          );
         })
         .then((credentials) => {
           return createUserHandle(
@@ -109,6 +113,7 @@ function Register() {
           );
         })
         .then(() => {
+          onLogout();
           setErrors({});
 
           setFormData({
