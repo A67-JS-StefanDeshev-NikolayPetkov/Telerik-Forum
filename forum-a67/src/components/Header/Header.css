@@ -31,3 +31,24 @@ nav a {
 nav a:hover {
   color: #4caf50; /* Change link color on hover */
 }
+
+.create-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10rem;
+  height: 3.5rem;
+  background-color: #af4c4c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  border: 1px solid #af4c4c;
+  transition: background-color 0.3s ease;
+}
+
+.create-link:hover {
+  background-color: white;
+  color: #af4c4c;
+}

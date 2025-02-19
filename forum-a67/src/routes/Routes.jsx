@@ -8,6 +8,8 @@ import { Navigate } from "react-router-dom";
 import Home from "../views/Home/Home";
 import Login from "../views/Login/Login";
 import Register from "../views/Register/Register";
+import CreatePost from "../views/CreatePost/CreatePost";
+import Profile from "../views/Profile/Profile";
 
 function NavigationRoutes() {
   return (
@@ -32,6 +34,14 @@ function NavigationRoutes() {
       <Route
         path="/register"
         element={<Register />}
+      ></Route>
+      <Route
+        path="/create-post"
+        element={<CreatePost />}
+      ></Route>
+      <Route
+        path="/profile"
+        element={<Profile />}
       ></Route>
       {/*<Route
         path="/posts"

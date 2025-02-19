@@ -9,6 +9,34 @@ import { AppContext } from "../../context/AppContext";
 function Header() {
   const { user, onLogout } = useContext(AppContext);
 
+  const loggedOut = (
+    <nav>
+      <NavLink to="/home">home</NavLink>
+      <NavLink to="/about">about</NavLink>
+      <NavLink to="/login">login</NavLink>
+    </nav>
+  );
+
+  const loggedIn = (
+    <nav>
+      <NavLink
+        className="create-link"
+        to="/create-post"
+      >
+        create
+      </NavLink>
+      <NavLink to="/profile">profile</NavLink>
+      <NavLink to="/home">home</NavLink>
+      <NavLink to="/about">about</NavLink>
+      <NavLink
+        to="/home"
+        onClick={onLogout}
+      >
+        logout
+      </NavLink>
+    </nav>
+  );
+
   return (
     <div className="header">
       <NavLink to="/home">
@@ -19,20 +47,7 @@ function Header() {
         ></img>
       </NavLink>
 
-      <nav>
-        <NavLink to="/home">home</NavLink>
-        {user ? (
-          <NavLink
-            to="/home"
-            onClick={onLogout}
-          >
-            logout
-          </NavLink>
-        ) : (
-          <NavLink to="/login">login</NavLink>
-        )}
-        <NavLink to="/about">about</NavLink>
-      </nav>
+      {user ? loggedIn : loggedOut}
     </div>
   );
 }
