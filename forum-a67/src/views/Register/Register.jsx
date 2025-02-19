@@ -97,7 +97,7 @@ function Register() {
             );
           }
 
-          return registerUser(formData.email, formData.password);
+          return registerUser(formData.email, formData.password, formData.username);
         })
         .then((credentials) => {
           return createUserHandle(
