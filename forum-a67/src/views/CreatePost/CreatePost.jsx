@@ -2,7 +2,7 @@
 import "./CreatePost.css";
 
 //Misc imports
-import "./Register.css";
+// import "./Register.css";
 
 //Dependency imports
 import { useState, useEffect, useContext } from "react";
