@@ -34,8 +34,10 @@ function WelcomeSection() {
 
   return (
     <div className="welcome-section">
-      <h1>Welcome to BigMount, {username ? `, ${username}` : "Guest"}!</h1>
-      <div className="welcome-section__info">
+        {user ? <h1>Welcome to BigMount, {username}!</h1> :
+        <>
+        <h1>Welcome to BigMount!</h1>
+        <div className="welcome-section__info">
         <InfoSection
           infoTitle="Users"
           infoText= {userCount}
@@ -46,15 +48,12 @@ function WelcomeSection() {
         />
       </div>
       <p>Experience the modern Bulgarian mountaineering forum.</p>
-      {user ? <p>We are happy to see you again!</p> :
-      <>
         <p>Join our growing community:</p>
         <SubmitButton
         label="register"
         onClick={toRegister}
       />
-      </>
-      }
+      </>}
     </div>
   );
 }
