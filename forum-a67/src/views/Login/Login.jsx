@@ -2,15 +2,22 @@
 import "./Login.css";
 
 //Dependency imports
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../services/auth.service.js";
+import { AppContext } from "../../context/AppContext.jsx";
 
 //Component imports
 import LoginForm from "../../components/forms/LoginForm/LoginForm";
 import StandardCard from "../../components/containers/StandardCard/StandardCard";
 
 function Login() {
+  const { setContext, user } = useContext(AppContext);
+  const navigate = useNavigate();
+  const [loginError, setLoginError] = useState(false);
+
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
 
@@ -22,8 +29,15 @@ function Login() {
 
   const handleSubmit = function (e) {
     e.preventDefault();
-    console.log(formData.username);
-    console.log(formData.password);
+
+    loginUser(formData.email, formData.password)
+      .then((credentials) => {
+        setContext({ user: credentials.user });
+      })
+      .then(() => {
+        navigate("/");
+      })
+      .catch((e) => setLoginError(e.message));
   };
 
   return (
@@ -32,6 +46,7 @@ function Login() {
         formData={formData}
         handleInput={handleInput}
         handleSubmit={handleSubmit}
+        loginError={loginError}
       ></LoginForm>
     </StandardCard>
   );

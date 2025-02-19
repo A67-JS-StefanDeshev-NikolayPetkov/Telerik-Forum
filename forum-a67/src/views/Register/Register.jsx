@@ -2,7 +2,7 @@
 import "./Register.css";
 
 //Dependency imports
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 //Component imports
@@ -36,7 +36,6 @@ function Register() {
 
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [errors, setErrors] = useState({});
-  const { setContext } = useContext(AppContext);
 
   useEffect(() => {
     return setRegistrationSuccess(false);

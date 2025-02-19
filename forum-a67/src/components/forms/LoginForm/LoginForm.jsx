@@ -3,11 +3,18 @@ import "./LoginForm.css";
 
 //Dependency imports
 import { Link } from "react-router-dom";
+import { useRef, useEffect } from "react";
 
 //Component imports
 import SubmitButton from "../../SubmitButton/SubmitButton";
 
-function LoginForm({ formData, handleInput, handleSubmit }) {
+function LoginForm({ formData, handleInput, handleSubmit, loginError }) {
+  const paragraphRef = useRef(null);
+
+  useEffect(() => {
+    if (loginError) paragraphRef.current.focus();
+  }, [loginError]);
+
   return (
     <form
       className="login-form"
@@ -15,16 +22,27 @@ function LoginForm({ formData, handleInput, handleSubmit }) {
     >
       <h2>Login</h2>
 
+      {loginError && (
+        <div autoFocus>
+          <p
+            ref={paragraphRef}
+            tabIndex={-1}
+          >
+            {loginError}
+          </p>
+        </div>
+      )}
+
       <div>
-        <label htmlFor="username">Username or Email</label>
+        <label htmlFor="email">Email</label>
         <input
           className="login-input"
           type="text"
-          id="username"
-          name="username"
+          id="email"
+          name="email"
           required
-          placeholder="Enter your username or email"
-          value={formData.username}
+          placeholder="Enter your email"
+          value={formData.email}
           onChange={(e) => {
             handleInput(e.target);
           }}
