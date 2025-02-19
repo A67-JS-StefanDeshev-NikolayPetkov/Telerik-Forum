@@ -86,7 +86,6 @@ function Register() {
     e.preventDefault();
     console.log(formData);
     if (validate()) {
-      console.log(formData.username);
 
       getUserByHandle(formData.username)
         .then((snapshot) => {

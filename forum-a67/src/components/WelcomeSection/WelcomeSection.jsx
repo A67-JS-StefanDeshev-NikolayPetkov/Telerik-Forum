@@ -35,11 +35,15 @@ function WelcomeSection() {
         />
       </div>
       <p>Experience the modern Bulgarian mountaineering forum.</p>
-      <p>Join our growing community:</p>
-      <SubmitButton
+      {user ? <p>We are happy to see you again!</p> :
+      <>
+        <p>Join our growing community:</p>
+        <SubmitButton
         label="register"
         onClick={toRegister}
       />
+      </>
+      }
     </div>
   );
 }
