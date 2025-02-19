@@ -99,7 +99,7 @@ function Register() {
           return registerUser(
             formData.email,
             formData.password,
-            formData.username
+            // formData.username
           );
         })
         .then((credentials) => {
