@@ -37,7 +37,6 @@
 }
 
 .post-utility .submit-button {
-    background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -47,11 +46,12 @@
 }
 
 .post-utility .submit-button:hover {
-    background-color: #0056b3;
+    background-color: #18df67;
 }
 
 .comments-section {
     margin-top: 20px;
+    width: 80%;
 }
 
 .comments-section h4 {
