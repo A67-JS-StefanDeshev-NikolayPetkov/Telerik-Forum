@@ -42,6 +42,7 @@ export function AppContextProvider({ children }) {
       value={{
         user: appState.user,
         userData: appState.userData,
+        loading,
         setContext: setAppState,
         onLogout: () =>
           logoutUser().then(() => {

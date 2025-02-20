@@ -1,0 +1,29 @@
+.details-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  gap: 2rem;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.details-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  gap: 2rem;
+  padding: 2rem;
+  margin-top: 2rem;
+  width: 100%;
+  align-self: stretch;
+}
+
+.details-row {
+  align-self: stretch;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 2rem;
+}

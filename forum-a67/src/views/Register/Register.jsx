@@ -111,6 +111,8 @@ function Register() {
         );
 
         onLogout();
+
+        //reset errors unnecessary? - check later
         setErrors({});
 
         setFormData({

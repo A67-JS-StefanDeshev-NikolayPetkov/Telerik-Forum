@@ -13,8 +13,22 @@ export const getUserByHandle = (handle) => {
   return get(ref(db, `users/${handle}`));
 };
 
-export const getPostsByAuthor = (author) => {
-  return get(ref(db, `posts/${author}`));
+export const getPostsByAuthor = async (author) => {
+  const snapshot = await get(
+    query(ref(db, `posts`), orderByChild("author"), equalTo(author))
+  );
+
+  if (!snapshot.exists()) return [];
+
+  const snapshotVal = snapshot.val();
+
+  const posts = Object.keys(snapshotVal).map((key) => {
+    const post = snapshotVal[key];
+
+    return { ...post };
+  });
+
+  return posts;
 };
 
 export const getPostsByTopic = (topic) => {

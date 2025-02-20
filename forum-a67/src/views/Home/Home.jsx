@@ -13,7 +13,7 @@ function Home() {
     content: "This is the content of the post.",
     comments: ["Great post!", "Thanks for sharing.", "Interesting read."],
     likes: 33,
-    author: "author@example.com" // Примерен автор
+    author: "author@example.com", // Примерен автор
   };
 
   const handleLike = () => {
@@ -33,40 +33,41 @@ function Home() {
       <div className="home-container">
         <WelcomeSection />
       </div>
-      {!user ? 
-      <div className='posts'>
-          <PostContainer title='trending' />
-          <PostContainer title='recent'/>
-      </div> :
-      <article>
-      <div className="posts">
-        <IndividualPost 
-          title={post.title}
-          content={post.content}
-          comments={post.comments}
-          likes={post.likes}
-          onLike={handleLike}
-          onComment={handleComment}
-          onEdit={handleEdit}
-          author={post.author}
-          currentUser={user.email}
-        />
-      </div>
-      <div className="posts">
-        <IndividualPost 
-          title={post.title}
-          content={post.content}
-          comments={post.comments}
-          likes={post.likes}
-          onLike={handleLike}
-          onComment={handleComment}
-          onEdit={handleEdit}
-          author='nikolaytsenkovpetkov@gmail.com'
-          currentUser={user.email}
-        />
-      </div>
-      </article>
-      }
+      {!user ? (
+        <div className="posts">
+          <PostContainer title="trending" />
+          <PostContainer title="recent" />
+        </div>
+      ) : (
+        <article>
+          <div className="posts">
+            <IndividualPost
+              title={post.title}
+              content={post.content}
+              comments={post.comments}
+              likes={post.likes}
+              onLike={handleLike}
+              onComment={handleComment}
+              onEdit={handleEdit}
+              author={post.author}
+              currentUser={user.email}
+            />
+          </div>
+          <div className="posts">
+            <IndividualPost
+              title={post.title}
+              content={post.content}
+              comments={post.comments}
+              likes={post.likes}
+              onLike={handleLike}
+              onComment={handleComment}
+              onEdit={handleEdit}
+              author="nikolaytsenkovpetkov@gmail.com"
+              currentUser={user.email}
+            />
+          </div>
+        </article>
+      )}
     </>
   );
 }

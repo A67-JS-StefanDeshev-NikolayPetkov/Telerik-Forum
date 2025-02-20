@@ -1,11 +1,9 @@
 //Misc imports
 import "./CreatePost.css";
 
-//Misc imports
-import "./CreatePost.css";
-
 //Dependency imports
 import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 //Components imports
 import ViewContainer from "../../components/containers/ViewContainer/ViewContainer";
@@ -14,19 +12,18 @@ import CreatePostForm from "../../components/forms/CreatePostForm/CreatePostForm
 
 //Services
 import { AppContext } from "../../context/AppContext";
-import {
-  getUserByHandle,
-  createPostHandle,
-} from "../../services/users.service";
+import { createPostHandle } from "../../services/users.service";
 
 function CreatePost() {
+  //State & context
   const { user } = useContext(AppContext);
   const [formData, setFormData] = useState({
     postTitle: "",
     postBody: "",
   });
-
   const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
 
   const validate = function () {
     const newErrors = {};
@@ -48,19 +45,27 @@ function CreatePost() {
     setFormData(newFormData);
   };
 
-  const handleSubmit = function (e) {
+  const handleSubmit = async function (e) {
     e.preventDefault();
 
-    //If valid, upload post
     if (validate()) {
-      // console.log(formData.postTitle);
-      createPostHandle(
-        formData.postTitle,
-        formData.postBody,
-        user.displayName
-      ).then((snapshot) => {
-        console.log(snapshot);
+      try {
+        await createPostHandle(
+          formData.postTitle,
+          formData.postBody,
+          user.displayName
+        );
+      } catch (e) {
+        errors.message = e;
+        return;
+      }
+
+      setFormData({
+        postTitle: "",
+        postBody: "",
       });
+
+      navigate("/");
     }
   };
 
