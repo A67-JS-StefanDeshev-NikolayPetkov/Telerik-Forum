@@ -1,84 +1,9 @@
-import { useState } from "react";
-import SubmitButton from "../SubmitButton/SubmitButton";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faComment, faEdit, faThumbsDown, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import WholePostView from "../../views/WholePostView/WholePostView";
 import "./IndividualPost.css";
 
-const IndividualPost = ({ title, content, comments, likes, onLike, onComment, onEdit, author, currentUser }) => {
-    const [isLiked, setIsLiked] = useState(false);
-    const [isContentExpanded, setIsContentExpanded] = useState(false);
-    const [expandedComments, setExpandedComments] = useState({});
-    const isAuthor = author === currentUser;
-
-    const handleLikeClick = () => {
-        setIsLiked(!isLiked);
-        onLike();
-    };
-
-    const toggleContentVisibility = () => {
-        setIsContentExpanded(!isContentExpanded);
-    };
-
-    const toggleCommentVisibility = (index) => {
-        setExpandedComments((prev) => ({
-            ...prev,
-            [index]: !prev[index],
-        }));
-    };
-
+const IndividualPost = (props) => {
     return (
-        <div className="individual-post">
-            <h3>{title}</h3>
-            <p>
-                {isContentExpanded ? content : `${content.substring(0, 10)}...`}
-                <span onClick={toggleContentVisibility} className="toggle-content">
-                    {isContentExpanded ? (
-                        <>
-                            <FontAwesomeIcon icon={faChevronUp} />
-                        </>
-                    ) : (
-                        <>
-                            <FontAwesomeIcon icon={faChevronDown} />
-                        </>
-                    )}
-                </span>
-            </p>
-            <p>
-                <span>Likes: {likes}</span><span>Comments: {comments.length}</span>
-            </p>
-            {isContentExpanded && 
-            <>
-            <p>
-                <strong>Author:</strong> {author}
-            </p>
-            <div className="post-utility">
-                <SubmitButton className='submit' label={<FontAwesomeIcon icon={isLiked ? faThumbsDown : faThumbsUp} />} onClick={handleLikeClick} />
-                <SubmitButton className='submit' label={<FontAwesomeIcon icon={faComment} />} onClick={onComment} />
-                {isAuthor && <SubmitButton className='submit' label={<FontAwesomeIcon icon={faEdit} />} onClick={onEdit} />}
-            </div>
-            <div className="comments-section">
-                <h4>Comments</h4>
-                {comments.map((comment, index) => (
-                    <div key={index} className="comment">
-                        <p>
-                            {expandedComments[index] ? comment : `${comment.substring(0, 10)}...`}
-                            <span onClick={() => toggleCommentVisibility(index)} className="toggle-comment">
-                                {expandedComments[index] ? (
-                                    <>
-                                        <FontAwesomeIcon icon={faChevronUp} />
-                                    </>
-                                ) : (
-                                    <>
-                                        <FontAwesomeIcon icon={faChevronDown} />
-                                    </>
-                                )}
-                            </span>
-                        </p>
-                    </div>
-                ))}
-            </div>
-            </>}
-        </div>
+        <WholePostView {...props} />
     );
 };
 
