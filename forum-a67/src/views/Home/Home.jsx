@@ -38,7 +38,7 @@ function Home() {
           <PostContainer title='trending' />
           <PostContainer title='recent'/>
       </div> :
-      <>
+      <article>
       <div className="posts">
         <IndividualPost 
           title={post.title}
@@ -65,7 +65,7 @@ function Home() {
           currentUser={user.email}
         />
       </div>
-      </>
+      </article>
       }
     </>
   );

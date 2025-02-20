@@ -33,16 +33,13 @@ const IndividualPost = ({ title, content, comments, likes, onLike, onComment, on
                     {isContentExpanded ? "Show Less" : "Show More"}
                 </span>
             </p>
+            <p>
+                <span>Likes: {likes}</span><span>Comments: {comments.length}</span>
+            </p>
             {isContentExpanded && 
             <>
             <p>
                 <strong>Author:</strong> {author}
-            </p>
-            <p>
-                Likes: {likes}
-            </p>
-            <p>
-                Comments: {comments.length}
             </p>
             <div className="post-utility">
                 <SubmitButton className='submit' label={isLiked ? 'Unlike' : 'Like'} onClick={handleLikeClick} />
