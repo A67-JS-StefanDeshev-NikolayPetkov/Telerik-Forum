@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SubmitButton from "../SubmitButton/SubmitButton";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faComment, faEdit, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faComment, faEdit, faThumbsDown, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import "./IndividualPost.css";
 
 const IndividualPost = ({ title, content, comments, likes, onLike, onComment, onEdit, author, currentUser }) => {
@@ -32,7 +32,15 @@ const IndividualPost = ({ title, content, comments, likes, onLike, onComment, on
             <p>
                 {isContentExpanded ? content : `${content.substring(0, 10)}...`}
                 <span onClick={toggleContentVisibility} className="toggle-content">
-                    {isContentExpanded ? "Show Less" : "Show More"}
+                    {isContentExpanded ? (
+                        <>
+                            <FontAwesomeIcon icon={faChevronUp} />
+                        </>
+                    ) : (
+                        <>
+                            <FontAwesomeIcon icon={faChevronDown} />
+                        </>
+                    )}
                 </span>
             </p>
             <p>
@@ -55,7 +63,15 @@ const IndividualPost = ({ title, content, comments, likes, onLike, onComment, on
                         <p>
                             {expandedComments[index] ? comment : `${comment.substring(0, 10)}...`}
                             <span onClick={() => toggleCommentVisibility(index)} className="toggle-comment">
-                                {expandedComments[index] ? " Show Less" : " Show More"}
+                                {expandedComments[index] ? (
+                                    <>
+                                        <FontAwesomeIcon icon={faChevronUp} />
+                                    </>
+                                ) : (
+                                    <>
+                                        <FontAwesomeIcon icon={faChevronDown} />
+                                    </>
+                                )}
                             </span>
                         </p>
                     </div>
