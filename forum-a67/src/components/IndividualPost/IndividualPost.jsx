@@ -1,5 +1,7 @@
 import { useState } from "react";
 import SubmitButton from "../SubmitButton/SubmitButton";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp, faComment, faEdit, faThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import "./IndividualPost.css";
 
 const IndividualPost = ({ title, content, comments, likes, onLike, onComment, onEdit, author, currentUser }) => {
@@ -42,9 +44,9 @@ const IndividualPost = ({ title, content, comments, likes, onLike, onComment, on
                 <strong>Author:</strong> {author}
             </p>
             <div className="post-utility">
-                <SubmitButton className='submit' label={isLiked ? 'Unlike' : 'Like'} onClick={handleLikeClick} />
-                <SubmitButton className='submit' label='Comment' onClick={onComment} />
-                {isAuthor && <SubmitButton className='submit' label='Edit' onClick={onEdit} />}
+                <SubmitButton className='submit' label={<FontAwesomeIcon icon={isLiked ? faThumbsDown : faThumbsUp} />} onClick={handleLikeClick} />
+                <SubmitButton className='submit' label={<FontAwesomeIcon icon={faComment} />} onClick={onComment} />
+                {isAuthor && <SubmitButton className='submit' label={<FontAwesomeIcon icon={faEdit} />} onClick={onEdit} />}
             </div>
             <div className="comments-section">
                 <h4>Comments</h4>
