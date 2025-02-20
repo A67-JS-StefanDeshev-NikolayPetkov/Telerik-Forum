@@ -1,5 +1,5 @@
 //Misc imports
-import "./PostForm.css";
+import "./CreatePostForm.css";
 
 //Dependency imports
 import { useRef, useEffect } from "react";
@@ -8,7 +8,7 @@ import { useRef, useEffect } from "react";
 import SubmitButton from "../../SubmitButton/SubmitButton";
 import FieldError from "../FieldError/FieldError";
 
-function PostForm({ handleInput, handleSubmit, formData, errors }) {
+function CreatePostForm({ handleInput, handleSubmit, formData, errors }) {
   const paragraphRef = useRef(null);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ function PostForm({ handleInput, handleSubmit, formData, errors }) {
           className="post-input"
           type="text"
           id="post-title"
-          name="post-title"
+          name="postTitle"
           required
           placeholder="Enter your post title"
           value={formData.postTitle}
@@ -43,7 +43,7 @@ function PostForm({ handleInput, handleSubmit, formData, errors }) {
           className="post-input"
           type="text"
           id="post-body"
-          name="post-body"
+          name="postBody"
           required
           placeholder="Enter your post's body"
           value={formData.postBody}
@@ -70,4 +70,4 @@ function PostForm({ handleInput, handleSubmit, formData, errors }) {
   );
 }
 
-export default PostForm;
+export default CreatePostForm;

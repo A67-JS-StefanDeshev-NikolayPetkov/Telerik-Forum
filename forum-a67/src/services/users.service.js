@@ -1,8 +1,32 @@
-import { get, set, ref, query, equalTo, orderByChild } from "firebase/database";
+import {
+  get,
+  set,
+  ref,
+  query,
+  equalTo,
+  orderByChild,
+  push,
+} from "firebase/database";
 import { db } from "../config/firebase-config";
 
 export const getUserByHandle = (handle) => {
   return get(ref(db, `users/${handle}`));
+};
+
+export const getPostsByAuthor = (author) => {
+  return get(ref(db, `posts/${author}`));
+};
+
+export const getPostsByTopic = (topic) => {
+  return get(ref(db, `posts/${topic}`));
+};
+
+export const getCommentsByAuthor = (author) => {
+  return get(ref(db, `comments/${author}`));
+};
+
+export const getCommentsByPost = (post) => {
+  return get(ref(db, `comments/${post}`));
 };
 
 export const getUserCount = async () => {
@@ -25,6 +49,20 @@ export const getPostCount = async () => {
   }
 };
 
+export const createPostHandle = (title, body, author) => {
+  const newPostPath = push(ref(db, "posts"));
+
+  return set(newPostPath, {
+    id: newPostPath.key,
+    title,
+    author: author,
+    body,
+    createdOn: Date.now(),
+    comments: {},
+    likes: {},
+  });
+};
+
 export const createUserHandle = (
   username,
   uid,
@@ -40,7 +78,7 @@ export const createUserHandle = (
     firstName,
     lastName,
     number,
-    createdOn: new Date(),
+    createdOn: Date.now(),
     posts: {},
     likedPosts: {},
   });

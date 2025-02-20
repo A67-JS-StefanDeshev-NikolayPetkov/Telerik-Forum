@@ -2,13 +2,13 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  // updateProfile,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../config/firebase-config";
 
-export const registerUser = (email, password) => {
-  return createUserWithEmailAndPassword(auth, email, password);
-};
+// export const registerUser = (email, password) => {
+//   return createUserWithEmailAndPassword(auth, email, password);
+// };
 
 // export const registerUser = (email, password, displayName) => {
 //   return createUserWithEmailAndPassword(auth, email, password).then(
@@ -23,6 +23,24 @@ export const registerUser = (email, password) => {
 //     }
 //   );
 // };
+
+export const registerUser = async (email, password, displayName) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    await updateProfile(userCredential.user, {
+      displayName: displayName,
+    });
+
+    return userCredential;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const loginUser = (email, password) => {
   return signInWithEmailAndPassword(auth, email, password);

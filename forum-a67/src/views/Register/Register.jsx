@@ -83,55 +83,51 @@ function Register() {
     setFormData(newFormData);
   };
 
-  const handleSubmit = function (e) {
+  const handleSubmit = async function (e) {
     e.preventDefault();
-    console.log(formData);
     if (validate()) {
-      getUserByHandle(formData.username)
-        .then((snapshot) => {
-          console.log(snapshot);
-          if (snapshot.exists()) {
-            throw new Error(
-              `Username @${formData.username} has already been taken!`
-            );
-          }
+      try {
+        const snapshot = await getUserByHandle(formData.username);
 
-          return registerUser(
-            formData.email,
-            formData.password,
-            // formData.username
+        if (snapshot.exists()) {
+          throw new Error(
+            `Username @${formData.username} has already been taken!`
           );
-        })
-        .then((credentials) => {
-          return createUserHandle(
-            formData.username,
-            credentials.user.uid,
-            credentials.user.email,
-            formData.firstName,
-            formData.lastName,
-            formData.number
-          );
-        })
-        .then(() => {
-          onLogout();
-          setErrors({});
+        }
 
-          setFormData({
-            firstName: "",
-            lastName: "",
-            number: "",
-            username: "",
-            email: "",
-            password: "",
-          });
+        const userCredentials = await registerUser(
+          formData.email,
+          formData.password,
+          formData.username
+        );
 
-          setRegistrationSuccess(true);
-        })
-        .catch((e) => {
-          console.log(e.message);
-          console.log(errors);
-          setErrors({ ...errors, message: e.message });
+        createUserHandle(
+          formData.username,
+          userCredentials.user.uid,
+          userCredentials.user.email,
+          formData.firstName,
+          formData.lastName,
+          formData.number
+        );
+
+        onLogout();
+        setErrors({});
+
+        setFormData({
+          firstName: "",
+          lastName: "",
+          number: "",
+          username: "",
+          email: "",
+          password: "",
         });
+
+        setRegistrationSuccess(true);
+      } catch (e) {
+        console.log(e.message);
+        console.log(errors);
+        setErrors({ ...errors, message: e.message });
+      }
     }
   };
 

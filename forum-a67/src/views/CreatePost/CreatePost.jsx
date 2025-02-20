@@ -2,7 +2,7 @@
 import "./CreatePost.css";
 
 //Misc imports
-// import "./Register.css";
+import "./CreatePost.css";
 
 //Dependency imports
 import { useState, useEffect, useContext } from "react";
@@ -10,27 +10,37 @@ import { useState, useEffect, useContext } from "react";
 //Components imports
 import ViewContainer from "../../components/containers/ViewContainer/ViewContainer";
 import StandardCard from "../../components/containers/StandardCard/StandardCard";
-import PostForm from "../../components/forms/PostForm/PostForm";
+import CreatePostForm from "../../components/forms/CreatePostForm/CreatePostForm";
 
 //Services
 import { AppContext } from "../../context/AppContext";
-import { getUserByHandle } from "../../services/users.service";
-import { registerUser } from "../../services/auth.service";
-import { createUserHandle } from "../../services/users.service";
+import {
+  getUserByHandle,
+  createPostHandle,
+} from "../../services/users.service";
 
 function CreatePost() {
   const { user } = useContext(AppContext);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    number: "",
-    username: "",
-    email: "",
-    password: "",
+    postTitle: "",
+    postBody: "",
   });
 
-  const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const validate = function () {
+    const newErrors = {};
+
+    if (formData.postTitle.length < 16 || formData.postTitle.length > 64)
+      newErrors.postTitle = "Title must be between 16 and 64 characters!";
+
+    if (formData.postBody.length < 32 || formData.postBody.length > 8192)
+      newErrors.postBody = "Body must be between 32 and 8192 characters!";
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleInput = function (eventTarget) {
     const newFormData = { ...formData };
@@ -40,13 +50,30 @@ function CreatePost() {
 
   const handleSubmit = function (e) {
     e.preventDefault();
+
+    //If valid, upload post
+    if (validate()) {
+      // console.log(formData.postTitle);
+      createPostHandle(
+        formData.postTitle,
+        formData.postBody,
+        user.displayName
+      ).then((snapshot) => {
+        console.log(snapshot);
+      });
+    }
   };
 
   return (
     <ViewContainer>
       <h2>Create Post</h2>
       <StandardCard>
-        <PostForm></PostForm>
+        <CreatePostForm
+          formData={formData}
+          errors={errors}
+          handleInput={handleInput}
+          handleSubmit={handleSubmit}
+        ></CreatePostForm>
       </StandardCard>
     </ViewContainer>
   );

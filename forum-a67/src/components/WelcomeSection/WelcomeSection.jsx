@@ -34,26 +34,29 @@ function WelcomeSection() {
 
   return (
     <div className="welcome-section">
-        {user ? <h1>Welcome to BigMount, {username}!</h1> :
+      {user ? (
+        <h1>Welcome to BGMount, {username}!</h1>
+      ) : (
         <>
-        <h1>Welcome to BigMount!</h1>
-        <div className="welcome-section__info">
-        <InfoSection
-          infoTitle="Users"
-          infoText= {userCount}
-        />
-        <InfoSection
-          infoTitle="Posts"
-          infoText={postCount}
-        />
-      </div>
-      <p>Experience the modern Bulgarian mountaineering forum.</p>
-        <p>Join our growing community:</p>
-        <SubmitButton
-        label="register"
-        onClick={toRegister}
-      />
-      </>}
+          <h1>Welcome to BGMount!</h1>
+          <div className="welcome-section__info">
+            <InfoSection
+              infoTitle="Users"
+              infoText={userCount}
+            />
+            <InfoSection
+              infoTitle="Posts"
+              infoText={postCount}
+            />
+          </div>
+          <p>Experience the modern Bulgarian mountaineering forum.</p>
+          <p>Join our growing community:</p>
+          <SubmitButton
+            label="register"
+            onClick={toRegister}
+          />
+        </>
+      )}
     </div>
   );
 }
