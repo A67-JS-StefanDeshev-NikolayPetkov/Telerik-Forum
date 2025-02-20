@@ -37,7 +37,8 @@ function Home() {
       <div className='posts'>
           <PostContainer title='trending' />
           <PostContainer title='recent'/>
-      </div> : 
+      </div> :
+      <>
       <div className="posts">
         <IndividualPost 
           title={post.title}
@@ -48,9 +49,23 @@ function Home() {
           onComment={handleComment}
           onEdit={handleEdit}
           author={post.author}
-          currentUser={user.email} // Предаване на текущия потребител
+          currentUser={user.email}
         />
       </div>
+      <div className="posts">
+        <IndividualPost 
+          title={post.title}
+          content={post.content}
+          comments={post.comments}
+          likes={post.likes}
+          onLike={handleLike}
+          onComment={handleComment}
+          onEdit={handleEdit}
+          author='nikolaytsenkovpetkov@gmail.com'
+          currentUser={user.email}
+        />
+      </div>
+      </>
       }
     </>
   );
