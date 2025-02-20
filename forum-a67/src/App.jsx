@@ -8,7 +8,7 @@ import { AppContext } from "./context/AppContext";
 
 //Component imports
 import Header from "./components/Header/Header";
-import Loader from "./components/loader/loader";
+import Loader from "./components/loader/Loader";
 
 function App() {
   const [count, setCount] = useState(0);

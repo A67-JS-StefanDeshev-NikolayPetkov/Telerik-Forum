@@ -7,7 +7,7 @@ import { useContext, useEffect } from "react";
 import { AppContext } from "../../../context/AppContext";
 
 //Component imports
-import Loader from "../../loader/loader";
+import Loader from "../../loader/Loader";
 
 function ProfileDetails() {
   const { user, userData } = useContext(AppContext);

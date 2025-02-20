@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 //Components imports
 import ViewContainer from "../../components/containers/ViewContainer/ViewContainer";
 import StandardCard from "../../components/containers/StandardCard/StandardCard";
-import Loader from "../../components/loader/loader";
+import Loader from "../../components/loader/Loader";
 import ProfileNavigation from "../../components/profile/ProfileNavigation/ProfileNavigation";
 import ProfileDetails from "../../components/profile/ProfileDetails/ProfileDetails";
 import ProfilePosts from "../../components/profile/ProfilePosts/ProfilePosts";
