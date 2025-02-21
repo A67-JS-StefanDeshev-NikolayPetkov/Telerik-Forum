@@ -279,3 +279,35 @@ export const getPostCount = async () => {
     return 0;
   }
 };
+
+export const likePost = async (postId, userId) => {
+  const postLikesRef = ref(db, `postLikes/${postId}/${userId}`);
+  await set(postLikesRef, true);
+
+  const postRef = ref(db, `posts/${postId}`);
+  const postSnapshot = await get(postRef);
+  if (postSnapshot.exists()) {
+    const post = postSnapshot.val();
+    const likeCount = post.likeCount ? post.likeCount + 1 : 1;
+    await set(postRef, { ...post, likeCount });
+  }
+};
+
+export const unlikePost = async (postId, userId) => {
+  const postLikesRef = ref(db, `postLikes/${postId}/${userId}`);
+  await remove(postLikesRef);
+
+  const postRef = ref(db, `posts/${postId}`);
+  const postSnapshot = await get(postRef);
+  if (postSnapshot.exists()) {
+    const post = postSnapshot.val();
+    const likeCount = post.likeCount ? post.likeCount - 1 : 0;
+    await set(postRef, { ...post, likeCount });
+  }
+};
+
+export const isPostLikedByUser = async (postId, userId) => {
+  const postLikesRef = ref(db, `postLikes/${postId}/${userId}`);
+  const snapshot = await get(postLikesRef);
+  return snapshot.exists();
+};

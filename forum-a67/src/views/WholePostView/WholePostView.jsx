@@ -13,6 +13,9 @@ import "./WholePostView.css";
 import {
   postComment,
   getCommentCountByPost,
+  likePost,
+  unlikePost,
+  isPostLikedByUser,
 } from "../../services/users.service";
 
 const WholePostView = ({
@@ -32,6 +35,7 @@ const WholePostView = ({
   const [expandedComments, setExpandedComments] = useState({});
   const [newComment, setNewComment] = useState("");
   const [commentCount, setCommentCount] = useState(0);
+  const [likeCount, setLikeCount] = useState(likes);
   const isAuthor = author === currentUser;
 
   useEffect(() => {
@@ -40,11 +44,25 @@ const WholePostView = ({
       setCommentCount(count);
     };
 
-    fetchCommentCount();
-  }, [postId]);
+    const checkIfLiked = async () => {
+      const liked = await isPostLikedByUser(postId, currentUser);
+      setIsLiked(liked);
+    };
 
-  const handleLikeClick = () => {
-    setIsLiked(!isLiked);
+    fetchCommentCount();
+    checkIfLiked();
+  }, [postId, currentUser]);
+
+  const handleLikeClick = async () => {
+    if (isLiked) {
+      await unlikePost(postId, currentUser);
+      setIsLiked(false);
+      setLikeCount(likeCount - 1);
+    } else {
+      await likePost(postId, currentUser);
+      setIsLiked(true);
+      setLikeCount(likeCount + 1);
+    }
     onLike();
   };
 
@@ -75,7 +93,7 @@ const WholePostView = ({
         author={author}
         title={title}
         body={body}
-        likes={likes}
+        likes={likeCount}
         comments={comments}
         commentCount={commentCount}
         isContentExpanded={isContentExpanded}
