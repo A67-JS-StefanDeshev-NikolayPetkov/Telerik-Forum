@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faComment, faEdit, faThumbsDown, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import "./WholePostView.css";
 
-const WholePostView = ({ title, content, comments, likes, onLike, onComment, onEdit, author, currentUser }) => {
+const WholePostView = ({ title, body, comments, likes, onLike, onComment, onEdit, author, currentUser }) => {
     const [isLiked, setIsLiked] = useState(false);
     const [isContentExpanded, setIsContentExpanded] = useState(false);
     const [expandedComments, setExpandedComments] = useState({});
@@ -30,19 +30,17 @@ const WholePostView = ({ title, content, comments, likes, onLike, onComment, onE
     return (
         <div className="whole-post-view">
             <PostPreview
-            author={author}
+                author={author}
                 title={title}
-                content={content}
+                body={body}
                 likes={likes}
                 comments={comments}
                 isContentExpanded={isContentExpanded}
                 toggleContentVisibility={toggleContentVisibility}
+                createdOn={Date.now()}
             />
             {isContentExpanded && 
             <>
-            <p>
-                <strong>Author:</strong> {author}
-            </p>
             <div className="post-utility">
                 <SubmitButton className='submit' label={<FontAwesomeIcon icon={isLiked ? faThumbsDown : faThumbsUp} />} onClick={handleLikeClick} />
                 <SubmitButton className='submit' label={<FontAwesomeIcon icon={faComment} />} onClick={onComment} />

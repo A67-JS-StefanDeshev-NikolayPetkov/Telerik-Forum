@@ -31,6 +31,21 @@ export const getPostsByAuthor = async (author) => {
   return posts;
 };
 
+export const getAllPosts = async () => {
+  const snapshot = await get(query(ref(db, `posts`), orderByChild("createdOn")));
+
+  if (!snapshot.exists()) return [];
+
+  const snapshotVal = snapshot.val();
+
+  const posts = Object.keys(snapshotVal).map((key) => {
+    const post = snapshotVal[key];
+    return { ...post, id: key };
+  });
+
+  return posts;
+};
+
 export const getPostsByTopic = (topic) => {
   return get(ref(db, `posts/${topic}`));
 };

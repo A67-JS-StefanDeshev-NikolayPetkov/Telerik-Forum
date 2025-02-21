@@ -1,32 +1,24 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import PostContainer from "../../components/PostsContainer/PostContainer";
 import WelcomeSection from "../../components/WelcomeSection/WelcomeSection";
-import "./Home.css";
 import IndividualPost from "../../components/IndividualPost/IndividualPost";
+import { getAllPosts } from "../../services/users.service";
+import "./Home.css";
 
 function Home() {
   const { user } = useContext(AppContext);
+  const [posts, setPosts] = useState([]);
 
-  const post = {
-    title: "Sample Post Title",
-    content: "This is the content of the post.",
-    comments: ["Great post!", "Thanks for sharing.", "Interesting read."],
-    likes: 33,
-    author: "author@example.com", // Примерен автор
-  };
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const fetchedPosts = await getAllPosts();
+      console.log(fetchedPosts);
+      setPosts(fetchedPosts);
+    };
 
-  const handleLike = () => {
-    console.log("Liked!");
-  };
-
-  const handleComment = () => {
-    console.log("Commented!");
-  };
-
-  const handleEdit = () => {
-    console.log("Edited!");
-  };
+    fetchPosts();
+  }, []);
 
   return (
     <>
@@ -39,34 +31,19 @@ function Home() {
           <PostContainer title="recent" />
         </div>
       ) : (
-        <article>
-          <div className="posts">
+        <div className="posts">
+          {posts.map((post) => (
             <IndividualPost
+              key={post.id}
               title={post.title}
-              content={post.content}
+              body={post.body}
               comments={post.comments}
               likes={post.likes}
-              onLike={handleLike}
-              onComment={handleComment}
-              onEdit={handleEdit}
               author={post.author}
               currentUser={user.email}
             />
-          </div>
-          <div className="posts">
-            <IndividualPost
-              title={post.title}
-              content={post.content}
-              comments={post.comments}
-              likes={post.likes}
-              onLike={handleLike}
-              onComment={handleComment}
-              onEdit={handleEdit}
-              author="nikolaytsenkovpetkov@gmail.com"
-              currentUser={user.email}
-            />
-          </div>
-        </article>
+          ))}
+        </div>
       )}
     </>
   );
