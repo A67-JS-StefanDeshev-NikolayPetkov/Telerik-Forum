@@ -10,6 +10,7 @@ function PostsContainer({ title, posts }) {
           <PostPreview
             post={post}
             key={post.id}
+            commentCount={post.commentCount}
           />
         ))
       ) : (

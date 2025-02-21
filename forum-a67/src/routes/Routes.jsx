@@ -15,35 +15,13 @@ import WholePostView from "../views/WholePostView/WholePostView";
 function NavigationRoutes() {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <Navigate
-            replace
-            to="/home"
-          ></Navigate>
-        }
-      ></Route>
-      <Route
-        path="/home"
-        element={<Home />}
-      ></Route>
-      <Route
-        path="/login"
-        element={<Login />}
-      ></Route>
-      <Route
-        path="/register"
-        element={<Register />}
-      ></Route>
-      <Route
-        path="/create-post"
-        element={<CreatePost />}
-      ></Route>
-      <Route
-        path="/profile"
-        element={<Profile />}
-      ></Route>
+      <Route path="/" element={<Navigate replace to="/home"></Navigate>} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/create-post" element={<CreatePost />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/post/:postId" element={<WholePostView />} />
       {/*<Route
         path="/posts"
         element={Login}

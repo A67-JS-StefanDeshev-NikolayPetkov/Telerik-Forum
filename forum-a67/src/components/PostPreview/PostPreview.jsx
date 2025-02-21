@@ -1,10 +1,19 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 import "./PostPreview.css";
 
-const PostPreview = ({ post, onPostPreviewClick, commentCount }) => {
+const PostPreview = ({ post, commentCount }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/post/${post.id}`);
+  };
+
+  if (!post) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="post-preview" onClick={onPostPreviewClick}>
+    <div className="post-preview" onClick={handleClick}>
       <h4>Author: {post.author}</h4>
       <h3>Title: {post.title}</h3>
       <p>Created on: {new Date(post.createdOn).toLocaleDateString()}</p>

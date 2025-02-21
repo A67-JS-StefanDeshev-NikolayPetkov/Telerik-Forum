@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import PostPreview from "../../components/PostPreview/PostPreview";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,29 +17,29 @@ import {
   likePost,
   unlikePost,
   isPostLikedByUser,
+  getPostById,
 } from "../../services/users.service";
 
-const WholePostView = ({
-  title,
-  body,
-  comments,
-  likes,
-  onLike,
-  onComment = () => {},
-  onEdit,
-  author,
-  currentUser,
-  postId,
-}) => {
+const WholePostView = () => {
+  const { postId } = useParams();
+  const [post, setPost] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
   const [expandedComments, setExpandedComments] = useState({});
   const [newComment, setNewComment] = useState("");
   const [commentCount, setCommentCount] = useState(0);
-  const [likeCount, setLikeCount] = useState(likes);
-  const isAuthor = author === currentUser;
+  const [likeCount, setLikeCount] = useState(0);
+  const [author, setAuthor] = useState("");
+  const [currentUser, setCurrentUser] = useState(""); // Replace with actual current user logic
 
   useEffect(() => {
+    const fetchPostData = async () => {
+      const postData = await getPostById(postId);
+      setPost(postData);
+      setLikeCount(postData.likes);
+      setAuthor(postData.author);
+    };
+
     const fetchCommentCount = async () => {
       const count = await getCommentCountByPost(postId);
       setCommentCount(count);
@@ -49,6 +50,7 @@ const WholePostView = ({
       setIsLiked(liked);
     };
 
+    fetchPostData();
     fetchCommentCount();
     checkIfLiked();
   }, [postId, currentUser]);
@@ -63,7 +65,6 @@ const WholePostView = ({
       setIsLiked(true);
       setLikeCount(likeCount + 1);
     }
-    onLike();
   };
 
   const toggleContentVisibility = () => {
@@ -80,29 +81,32 @@ const WholePostView = ({
   const handleCommentSubmit = async () => {
     if (newComment.trim()) {
       await postComment(postId, currentUser, newComment);
-      onComment(newComment);
       setNewComment("");
       const count = await getCommentCountByPost(postId);
       setCommentCount(count);
     }
   };
 
+  if (!post) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="whole-post-view">
       <PostPreview
         author={author}
-        title={title}
-        body={body}
+        title={post.title}
+        body={post.body}
         likes={likeCount}
-        comments={comments}
+        comments={post.comments}
         commentCount={commentCount}
         isContentExpanded={isContentExpanded}
         toggleContentVisibility={toggleContentVisibility}
-        createdOn={Date.now()}
+        createdOn={post.createdOn}
       />
-      {body ? (
+      {post.body ? (
         <p>
-          {isContentExpanded ? body : `${body.substring(0, 10)}...`}
+          {isContentExpanded ? post.body : `${post.body.substring(0, 10)}...`}
           <span onClick={toggleContentVisibility} className="toggle-content">
             {isContentExpanded ? (
               <FontAwesomeIcon icon={faChevronUp} />
@@ -124,18 +128,18 @@ const WholePostView = ({
               }
               onClick={handleLikeClick}
             />
-            {isAuthor && (
+            {author === currentUser && (
               <SubmitButton
                 className="submit"
                 label={<FontAwesomeIcon icon={faEdit} />}
-                onClick={onEdit}
+                onClick={() => {}}
               />
             )}
           </div>
           <div className="comments-section">
             <h4>Comments ({commentCount})</h4>
-            {comments && comments.length > 0 ? (
-              comments.map((comment, index) => (
+            {post.comments && post.comments.length > 0 ? (
+              post.comments.map((comment, index) => (
                 <div key={index} className="comment">
                   <p>
                     {expandedComments[index]

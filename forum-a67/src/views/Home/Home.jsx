@@ -26,14 +26,8 @@ function Home() {
       </div>
       {!user ? (
         <div className="posts logout">
-          <PostsContainer
-            title="trending"
-            posts={posts}
-          />
-          <PostsContainer
-            title="recent"
-            posts={posts}
-          />
+          <PostsContainer title="trending" posts={posts} />
+          <PostsContainer title="recent" posts={posts} />
         </div>
       ) : (
         <p>Logged in user: newest posts</p>

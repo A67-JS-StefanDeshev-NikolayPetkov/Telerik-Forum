@@ -311,3 +311,13 @@ export const isPostLikedByUser = async (postId, userId) => {
   const snapshot = await get(postLikesRef);
   return snapshot.exists();
 };
+
+export const getPostById = async (postId) => {
+  const postRef = ref(db, `posts/${postId}`);
+  const snapshot = await get(postRef);
+  if (snapshot.exists()) {
+    return snapshot.val();
+  } else {
+    return null;
+  }
+};
