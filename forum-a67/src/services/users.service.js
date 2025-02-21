@@ -32,7 +32,9 @@ export const getPostsByAuthor = async (author) => {
 };
 
 export const getAllPosts = async () => {
-  const snapshot = await get(query(ref(db, `posts`), orderByChild("createdOn")));
+  const snapshot = await get(
+    query(ref(db, `posts`), orderByChild("createdOn"))
+  );
 
   if (!snapshot.exists()) return [];
 
@@ -78,6 +80,15 @@ export const getPostCount = async () => {
   }
 };
 
+export const getCommentCountByPost = async (postId) => {
+  const snapshot = await get(ref(db, `posts/${postId}/comments`));
+  if (snapshot.exists()) {
+    const comments = snapshot.val();
+    return Object.keys(comments).length;
+  } else {
+    return 0;
+  }
+};
 export const createPostHandle = (title, body, author) => {
   const newPostPath = push(ref(db, "posts"));
 
@@ -115,4 +126,13 @@ export const createUserHandle = (
 
 export const getUserData = (uid) => {
   return get(query(ref(db, "users"), orderByChild("uid"), equalTo(uid)));
+};
+
+export const postComment = async (postId, comment) => {
+  const commentsRef = ref(db, `posts/${postId}/comments`);
+  const newCommentRef = push(commentsRef);
+  await set(newCommentRef, {
+    text: comment,
+    createdOn: Date.now(),
+  });
 };

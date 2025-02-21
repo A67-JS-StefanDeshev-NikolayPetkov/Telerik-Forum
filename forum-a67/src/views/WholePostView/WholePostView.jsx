@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PostPreview from "../../components/PostPreview/PostPreview";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faThumbsUp,
-  faComment,
   faEdit,
   faThumbsDown,
   faChevronDown,
   faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
 import "./WholePostView.css";
+import {
+  postComment,
+  getCommentCountByPost,
+} from "../../services/users.service";
 
 const WholePostView = ({
   title,
@@ -18,15 +21,27 @@ const WholePostView = ({
   comments,
   likes,
   onLike,
-  onComment,
+  onComment = () => {}, // Default to an empty function if not provided
   onEdit,
   author,
   currentUser,
+  postId, // Add postId prop to identify the post
 }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
   const [expandedComments, setExpandedComments] = useState({});
+  const [newComment, setNewComment] = useState("");
+  const [commentCount, setCommentCount] = useState(0);
   const isAuthor = author === currentUser;
+
+  useEffect(() => {
+    const fetchCommentCount = async () => {
+      const count = await getCommentCountByPost(postId);
+      setCommentCount(count);
+    };
+
+    fetchCommentCount();
+  }, [postId]);
 
   const handleLikeClick = () => {
     setIsLiked(!isLiked);
@@ -44,12 +59,14 @@ const WholePostView = ({
     }));
   };
 
-  const [newComment, setNewComment] = useState("");
-
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = async () => {
     if (newComment.trim()) {
+      await postComment(postId, newComment);
       onComment(newComment);
       setNewComment("");
+      // Update comment count after submitting a new comment
+      const count = await getCommentCountByPost(postId);
+      setCommentCount(count);
     }
   };
 
@@ -61,6 +78,7 @@ const WholePostView = ({
         body={body}
         likes={likes}
         comments={comments}
+        commentCount={commentCount}
         isContentExpanded={isContentExpanded}
         toggleContentVisibility={toggleContentVisibility}
         createdOn={Date.now()}
@@ -102,7 +120,7 @@ const WholePostView = ({
             )}
           </div>
           <div className="comments-section">
-            <h4>Comments</h4>
+            <h4>Comments ({commentCount})</h4>
             {comments && comments.length > 0 ? (
               comments.map((comment, index) => (
                 <div key={index} className="comment">
@@ -125,6 +143,19 @@ const WholePostView = ({
                       )}
                     </span>
                   </p>
+                  {expandedComments[index] && (
+                    <div className="nested-comments">
+                      {comment.replies && comment.replies.length > 0 ? (
+                        comment.replies.map((reply, replyIndex) => (
+                          <div key={replyIndex} className="nested-comment">
+                            <p>{reply}</p>
+                          </div>
+                        ))
+                      ) : (
+                        <p>No replies</p>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))
             ) : (

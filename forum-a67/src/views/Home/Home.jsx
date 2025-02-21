@@ -35,6 +35,7 @@ function Home() {
           {posts.map((post) => (
             <IndividualPost
               key={post.id}
+              postId={post.id}
               title={post.title}
               body={post.body}
               comments={post.comments}

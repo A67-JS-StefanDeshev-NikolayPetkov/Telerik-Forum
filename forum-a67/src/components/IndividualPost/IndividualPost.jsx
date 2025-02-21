@@ -3,7 +3,7 @@ import "./IndividualPost.css";
 
 const IndividualPost = (props) => {
     return (
-        <WholePostView {...props} />
+        <WholePostView {...props} postId={props.postId} />
     );
 };
 

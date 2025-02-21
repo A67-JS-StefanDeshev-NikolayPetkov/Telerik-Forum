@@ -4,7 +4,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import "./PostPreview.css";
 
-const PostPreview = ({ author, title, body, likes, comments, createdOn }) => {
+const PostPreview = ({
+  author,
+  title,
+  body,
+  likes,
+  comments,
+  commentCount,
+  createdOn,
+}) => {
   const { user } = useContext(AppContext);
 
   return (
@@ -16,36 +24,11 @@ const PostPreview = ({ author, title, body, likes, comments, createdOn }) => {
         <>
           <p>
             <span>Likes: {likes ? likes : 0}</span>
-            <span>Comments: {comments ? comments.length : 0}</span>
+            <span>Comments: {commentCount}</span>
           </p>
         </>
       )}
-      {user && (
-        <>
-          {body ? (
-            <p>
-              {/* {isContentExpanded ? body : `${body.substring(0, 10)}...`} */}
-              {body}
-              {/* <span
-                onClick={toggleContentVisibility}
-                className="toggle-content"
-              >
-                {isContentExpanded ? (
-                  <>
-                    <FontAwesomeIcon icon={faChevronUp} />
-                  </>
-                ) : (
-                  <>
-                    <FontAwesomeIcon icon={faChevronDown} />
-                  </>
-                )}
-              </span> */}
-            </p>
-          ) : (
-            <p>No posts</p>
-          )}
-        </>
-      )}
+      {body ? <p>{body}</p> : <p>No posts</p>}
     </div>
   );
 };
