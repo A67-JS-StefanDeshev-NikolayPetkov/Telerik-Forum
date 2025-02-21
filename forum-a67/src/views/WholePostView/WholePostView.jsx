@@ -48,24 +48,28 @@ const WholePostView = ({ title, body, comments, likes, onLike, onComment, onEdit
             </div>
             <div className="comments-section">
                 <h4>Comments</h4>
-                {comments.map((comment, index) => (
-                    <div key={index} className="comment">
-                        <p>
-                            {comment ? (expandedComments[index] ? comment : `${comment.substring(0, 10)}...`) : "No comment"}
-                            <span onClick={() => toggleCommentVisibility(index)} className="toggle-comment">
-                                {expandedComments[index] ? (
-                                    <>
-                                        <FontAwesomeIcon icon={faChevronUp} />
-                                    </>
-                                ) : (
-                                    <>
-                                        <FontAwesomeIcon icon={faChevronDown} />
-                                    </>
-                                )}
-                            </span>
-                        </p>
-                    </div>
-                ))}
+                {comments && comments.length > 0 ? (
+                    comments.map((comment, index) => (
+                        <div key={index} className="comment">
+                            <p>
+                                {expandedComments[index] ? comment : `${comment.substring(0, 10)}...`}
+                                <span onClick={() => toggleCommentVisibility(index)} className="toggle-comment">
+                                    {expandedComments[index] ? (
+                                        <>
+                                            <FontAwesomeIcon icon={faChevronUp} />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FontAwesomeIcon icon={faChevronDown} />
+                                        </>
+                                    )}
+                                </span>
+                            </p>
+                        </div>
+                    ))
+                ) : (
+                    <p>No comments</p>
+                )}
             </div>
             </>}
         </div>

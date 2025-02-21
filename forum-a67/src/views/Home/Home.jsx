@@ -26,7 +26,7 @@ function Home() {
         <WelcomeSection />
       </div>
       {!user ? (
-        <div className="posts">
+        <div className="posts logout">
           <PostContainer title="trending" />
           <PostContainer title="recent" />
         </div>
