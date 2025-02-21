@@ -3,7 +3,6 @@ import "./Profile.css";
 
 //Dependency imports
 import { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 
 //Components imports
 import ViewContainer from "../../components/containers/ViewContainer/ViewContainer";
