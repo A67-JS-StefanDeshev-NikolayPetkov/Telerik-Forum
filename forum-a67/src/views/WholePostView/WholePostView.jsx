@@ -1,79 +1,153 @@
 import { useState } from "react";
 import PostPreview from "../../components/PostPreview/PostPreview";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faComment, faEdit, faThumbsDown, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faThumbsUp,
+  faComment,
+  faEdit,
+  faThumbsDown,
+  faChevronDown,
+  faChevronUp,
+} from "@fortawesome/free-solid-svg-icons";
 import "./WholePostView.css";
 
-const WholePostView = ({ title, body, comments, likes, onLike, onComment, onEdit, author, currentUser }) => {
-    const [isLiked, setIsLiked] = useState(false);
-    const [isContentExpanded, setIsContentExpanded] = useState(false);
-    const [expandedComments, setExpandedComments] = useState({});
-    const isAuthor = author === currentUser;
+const WholePostView = ({
+  title,
+  body,
+  comments,
+  likes,
+  onLike,
+  onComment,
+  onEdit,
+  author,
+  currentUser,
+}) => {
+  const [isLiked, setIsLiked] = useState(false);
+  const [isContentExpanded, setIsContentExpanded] = useState(false);
+  const [expandedComments, setExpandedComments] = useState({});
+  const isAuthor = author === currentUser;
 
-    const handleLikeClick = () => {
-        setIsLiked(!isLiked);
-        onLike();
-    };
+  const handleLikeClick = () => {
+    setIsLiked(!isLiked);
+    onLike();
+  };
 
-    const toggleContentVisibility = () => {
-        setIsContentExpanded(!isContentExpanded);
-    };
+  const toggleContentVisibility = () => {
+    setIsContentExpanded(!isContentExpanded);
+  };
 
-    const toggleCommentVisibility = (index) => {
-        setExpandedComments((prev) => ({
-            ...prev,
-            [index]: !prev[index],
-        }));
-    };
+  const toggleCommentVisibility = (index) => {
+    setExpandedComments((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
 
-    return (
-        <div className="whole-post-view">
-            <PostPreview
-                author={author}
-                title={title}
-                body={body}
-                likes={likes}
-                comments={comments}
-                isContentExpanded={isContentExpanded}
-                toggleContentVisibility={toggleContentVisibility}
-                createdOn={Date.now()}
+  const [newComment, setNewComment] = useState("");
+
+  const handleCommentSubmit = () => {
+    if (newComment.trim()) {
+      onComment(newComment);
+      setNewComment("");
+    }
+  };
+
+  return (
+    <div className="whole-post-view">
+      <PostPreview
+        author={author}
+        title={title}
+        body={body}
+        likes={likes}
+        comments={comments}
+        isContentExpanded={isContentExpanded}
+        toggleContentVisibility={toggleContentVisibility}
+        createdOn={Date.now()}
+      />
+      {body ? (
+        <p>
+          {isContentExpanded ? body : `${body.substring(0, 10)}...`}
+          <span onClick={toggleContentVisibility} className="toggle-content">
+            {isContentExpanded ? (
+              <>
+                <FontAwesomeIcon icon={faChevronUp} />
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon icon={faChevronDown} />
+              </>
+            )}
+          </span>
+        </p>
+      ) : (
+        <p>No posts</p>
+      )}
+      {isContentExpanded && (
+        <>
+          <div className="post-utility">
+            <SubmitButton
+              className="submit"
+              label={
+                <FontAwesomeIcon icon={isLiked ? faThumbsDown : faThumbsUp} />
+              }
+              onClick={handleLikeClick}
             />
-            {isContentExpanded && 
-            <>
-            <div className="post-utility">
-                <SubmitButton className='submit' label={<FontAwesomeIcon icon={isLiked ? faThumbsDown : faThumbsUp} />} onClick={handleLikeClick} />
-                <SubmitButton className='submit' label={<FontAwesomeIcon icon={faComment} />} onClick={onComment} />
-                {isAuthor && <SubmitButton className='submit' label={<FontAwesomeIcon icon={faEdit} />} onClick={onEdit} />}
+            {isAuthor && (
+              <SubmitButton
+                className="submit"
+                label={<FontAwesomeIcon icon={faEdit} />}
+                onClick={onEdit}
+              />
+            )}
+          </div>
+          <div className="comments-section">
+            <h4>Comments</h4>
+            {comments && comments.length > 0 ? (
+              comments.map((comment, index) => (
+                <div key={index} className="comment">
+                  <p>
+                    {expandedComments[index]
+                      ? comment
+                      : `${comment.substring(0, 10)}...`}
+                    <span
+                      onClick={() => toggleCommentVisibility(index)}
+                      className="toggle-comment"
+                    >
+                      {expandedComments[index] ? (
+                        <>
+                          <FontAwesomeIcon icon={faChevronUp} />
+                        </>
+                      ) : (
+                        <>
+                          <FontAwesomeIcon icon={faChevronDown} />
+                        </>
+                      )}
+                    </span>
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p>No comments</p>
+            )}
+            <div className="new-comment">
+              <input
+                type="text"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Write a comment..."
+              />
+              <SubmitButton
+                className="submit"
+                label="Submit"
+                onClick={handleCommentSubmit}
+              />
             </div>
-            <div className="comments-section">
-                <h4>Comments</h4>
-                {comments && comments.length > 0 ? (
-                    comments.map((comment, index) => (
-                        <div key={index} className="comment">
-                            <p>
-                                {expandedComments[index] ? comment : `${comment.substring(0, 10)}...`}
-                                <span onClick={() => toggleCommentVisibility(index)} className="toggle-comment">
-                                    {expandedComments[index] ? (
-                                        <>
-                                            <FontAwesomeIcon icon={faChevronUp} />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <FontAwesomeIcon icon={faChevronDown} />
-                                        </>
-                                    )}
-                                </span>
-                            </p>
-                        </div>
-                    ))
-                ) : (
-                    <p>No comments</p>
-                )}
-            </div>
-            </>}
-        </div>
-    );
+          </div>
+        </>
+      )}
+    </div>
+  );
 };
 
 export default WholePostView;
