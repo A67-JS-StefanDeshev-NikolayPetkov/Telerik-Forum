@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
-import PostContainer from "../../components/PostsContainer/PostContainer";
+import PostsContainer from "../../components/PostsContainer/PostsContainer";
 import WelcomeSection from "../../components/WelcomeSection/WelcomeSection";
-import IndividualPost from "../../components/IndividualPost/IndividualPost";
 import { getAllPosts } from "../../services/users.service";
 import "./Home.css";
 
@@ -27,24 +26,17 @@ function Home() {
       </div>
       {!user ? (
         <div className="posts logout">
-          <PostContainer title="trending" />
-          <PostContainer title="recent" />
+          <PostsContainer
+            title="trending"
+            posts={posts}
+          />
+          <PostsContainer
+            title="recent"
+            posts={posts}
+          />
         </div>
       ) : (
-        <div className="posts">
-          {posts.map((post) => (
-            <IndividualPost
-              key={post.id}
-              postId={post.id}
-              title={post.title}
-              body={post.body}
-              comments={post.comments}
-              likes={post.likes}
-              author={post.author}
-              currentUser={user.email}
-            />
-          ))}
-        </div>
+        <p>Logged in user: newest posts</p>
       )}
     </>
   );

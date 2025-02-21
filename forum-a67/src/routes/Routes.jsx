@@ -10,6 +10,7 @@ import Login from "../views/Login/Login";
 import Register from "../views/Register/Register";
 import CreatePost from "../views/CreatePost/CreatePost";
 import Profile from "../views/Profile/Profile";
+import WholePostView from "../views/WholePostView/WholePostView";
 
 function NavigationRoutes() {
   return (

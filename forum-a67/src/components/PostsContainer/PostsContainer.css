@@ -1,0 +1,12 @@
+.post-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 3rem;
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #b82c2c;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(184, 44, 44, 0.911);
+  width: 100%;
+}
