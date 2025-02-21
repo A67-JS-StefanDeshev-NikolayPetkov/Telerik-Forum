@@ -18,3 +18,41 @@ Username: 3-20 characters, letters, numbers and \_ allowed
 Email: valid email format
 Password: 8 characters, at least one upper and lowercase letter, one number and symbol
 Number: valid phone number
+
+Database structure:
+
+📂 Database Root
+├── 📁 posts
+│ ├── 📄 postID
+│ │ ├── author
+│ │ ├── body
+│ │ ├── createdOn
+│ │ ├── id
+│ │ ├── title
+│ │ ├── commentCount
+│ │ ├── likeCount
+│
+├── 📁 users
+│ ├── 📄 username
+│ │ ├── createdOn
+│ │ ├── email
+│ │ ├── firstName
+│ │ ├── lastName
+│ │ ├── number
+│ │ ├── uid
+│ │ ├── admin: true
+│
+├── 📁 comments
+│ ├── 📄 commentID
+│ │ ├── postID
+│ │ ├── author
+│ │ ├── body
+│ │ ├── createdOn
+│
+├── 📁 postLikes
+│ ├── 📄 postID
+│ │ ├── userID: true
+│
+├── 📁 commentLikes
+│ ├── 📄 commentID
+│ │ ├── userID: true
