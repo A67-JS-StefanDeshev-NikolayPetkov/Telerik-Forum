@@ -6,6 +6,7 @@ import { AppContext } from "../../context/AppContext";
 //Component imports
 import Loader from "../../components/loader/Loader";
 import PostDetails from "../../components/wholePostComponents/PostDetails/PostDetails";
+import CreateComment from "../../components/wholePostComponents/CreateComment/CreateComment";
 
 //Misc imports
 import "./WholePostView.css";
@@ -16,6 +17,7 @@ import {
   isPostLikedByUser,
   likePost,
   unlikePost,
+  getCommentCountByPost,
 } from "../../services/users.service";
 
 const WholePostView = () => {
@@ -24,6 +26,7 @@ const WholePostView = () => {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [currentUserLike, setCurrentUserLike] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -35,7 +38,7 @@ const WholePostView = () => {
   useEffect(() => {
     const fetchData = async function () {
       try {
-        await Promise.all([fetchIsLiked(), fetchPostData()]);
+        await fetchPostData();
       } finally {
         setLoading(false);
       }
@@ -46,17 +49,19 @@ const WholePostView = () => {
 
   const fetchPostData = async () => {
     try {
-      const postData = await getPostById(postId);
+      const [postData, isLiked, commentCount] = await Promise.all([
+        getPostById(postId),
+        isPostLikedByUser(postId, user.displayName),
+        getCommentCountByPost(postId),
+      ]);
       setPost(postData);
+      setCurrentUserLike(isLiked);
+      setCommentCount(commentCount);
     } catch (error) {
       setError(error);
     }
   };
 
-  const fetchIsLiked = async () => {
-    const isLiked = await isPostLikedByUser(postId, user.displayName);
-    setCurrentUserLike(isLiked);
-  };
   ////////////////////
 
   ////////////////////
@@ -112,7 +117,14 @@ const WholePostView = () => {
         handleLike={handleLike}
         currentUserLike={currentUserLike}
         isAuthor={isAuthor}
+        commentCount={commentCount}
       ></PostDetails>
+      <CreateComment
+        postId={postId}
+        username={user.displayName}
+        setCommentCount={setCommentCount}
+        commentCount={commentCount}
+      ></CreateComment>
     </div>
   );
 };
@@ -189,19 +201,7 @@ export default WholePostView;
 //             ) : (
 //               <p>No comments</p>
 //             )}
-//             <div className="new-comment">
-//               <input
-//                 type="text"
-//                 value={newComment}
-//                 onChange={(e) => setNewComment(e.target.value)}
-//                 placeholder="Write a comment..."
-//               />
-//               <SubmitButton
-//                 className="submit"
-//                 label="Submit"
-//                 onClick={handleCommentSubmit}
-//               />
-//             </div>
+//
 //           </div>
 //         </>
 //       )}

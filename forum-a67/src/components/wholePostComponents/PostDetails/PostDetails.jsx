@@ -17,6 +17,7 @@ function PostDetails({
   handleLike,
   currentUserLike,
   isAuthor,
+  commentCount,
 }) {
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
@@ -95,7 +96,7 @@ function PostDetails({
 
       <p>
         <span>Likes: {post.likeCount || 0}</span>
-        <span>Comments: {0}</span>
+        <span>Comments: {commentCount || 0}</span>
       </p>
       <div className="post-buttons">
         {currentUserLike ? (

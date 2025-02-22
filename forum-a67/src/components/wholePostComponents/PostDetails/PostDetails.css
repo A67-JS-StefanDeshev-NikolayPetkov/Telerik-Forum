@@ -1,5 +1,5 @@
 .post-details {
-  background-color: red;
+  border: 1px solid grey;
   display: flex;
   flex-direction: column;
   width: 100rem;
