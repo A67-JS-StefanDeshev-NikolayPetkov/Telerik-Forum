@@ -3,16 +3,22 @@ import SubmitButton from "../../SubmitButton/SubmitButton";
 import "./CreateComment.css";
 
 import { useState } from "react";
-import { postComment } from "../../../services/users.service";
+import {
+  postComment,
+  getCommentsByPost,
+} from "../../../services/users.service";
 
-function CreateComment({ postId, username, commentCount, setCommentCount }) {
+function CreateComment({ postId, username, setComments, setCommentCount }) {
   const [commentData, setCommentData] = useState("");
 
   const handleCommentSubmit = async () => {
     if (commentData.trim()) {
       await postComment(postId, username, commentData);
+      const comments = await getCommentsByPost(postId);
+
       setCommentData("");
-      setCommentCount(commentCount + 1);
+      setCommentCount(Object.keys(comments).length);
+      setComments(Object.entries(comments));
     }
   };
 

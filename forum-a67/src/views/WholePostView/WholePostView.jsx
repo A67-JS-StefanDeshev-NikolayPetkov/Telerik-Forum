@@ -7,6 +7,7 @@ import { AppContext } from "../../context/AppContext";
 import Loader from "../../components/loader/Loader";
 import PostDetails from "../../components/wholePostComponents/PostDetails/PostDetails";
 import CreateComment from "../../components/wholePostComponents/CreateComment/CreateComment";
+import ViewComments from "../../components/wholePostComponents/ViewComments/ViewComments";
 
 //Misc imports
 import "./WholePostView.css";
@@ -17,7 +18,7 @@ import {
   isPostLikedByUser,
   likePost,
   unlikePost,
-  getCommentCountByPost,
+  getCommentsByPost,
 } from "../../services/users.service";
 
 const WholePostView = () => {
@@ -27,6 +28,7 @@ const WholePostView = () => {
   const [post, setPost] = useState(null);
   const [currentUserLike, setCurrentUserLike] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
+  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -47,16 +49,22 @@ const WholePostView = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log(comments);
+  }, [comments]);
+
   const fetchPostData = async () => {
     try {
-      const [postData, isLiked, commentCount] = await Promise.all([
+      const [postData, isLiked, comments] = await Promise.all([
         getPostById(postId),
         isPostLikedByUser(postId, user.displayName),
-        getCommentCountByPost(postId),
+        getCommentsByPost(postId),
       ]);
       setPost(postData);
       setCurrentUserLike(isLiked);
-      setCommentCount(commentCount);
+      setCommentCount(Object.keys(comments).length);
+      console.log(comments);
+      setComments(Object.entries(comments));
     } catch (error) {
       setError(error);
     }
@@ -122,91 +130,12 @@ const WholePostView = () => {
       <CreateComment
         postId={postId}
         username={user.displayName}
+        setComments={setComments}
         setCommentCount={setCommentCount}
-        commentCount={commentCount}
       ></CreateComment>
+      <ViewComments comments={comments}></ViewComments>
     </div>
   );
 };
 
 export default WholePostView;
-
-// import {
-//   postComment,
-//   getCommentCountByPost,
-// } from "../../services/users.service";
-
-// const WholePostView = () => {
-//   const [newComment, setNewComment] = useState("");
-//   const [commentCount, setCommentCount] = useState(0);
-
-//   useEffect(() => {
-
-//     const fetchCommentCount = async () => {
-//       const count = await getCommentCountByPost(postId);
-//       setCommentCount(count);
-//     };
-
-//     fetchCommentCount();
-//   }, []);
-
-//   const handleCommentSubmit = async () => {
-//     if (newComment.trim()) {
-//       await postComment(postId, currentUser, newComment);
-//       setNewComment("");
-//       const count = await getCommentCountByPost(postId);
-//       setCommentCount(count);
-//     }
-//   };
-
-//   return (
-//     <div className="whole-post-view">
-//
-//           </div>
-//           <div className="comments-section">
-//             <h4>Comments ({commentCount})</h4>
-//             {post.comments && post.comments.length > 0 ? (
-//               post.comments.map((comment, index) => (
-//                 <div key={index} className="comment">
-//                   <p>
-//                     {expandedComments[index]
-//                       ? comment
-//                       : `${comment.substring(0, 10)}...`}
-//                     <span
-//                       onClick={() => toggleCommentVisibility(index)}
-//                       className="toggle-comment"
-//                     >
-//                       {expandedComments[index] ? (
-//                         <FontAwesomeIcon icon={faChevronUp} />
-//                       ) : (
-//                         <FontAwesomeIcon icon={faChevronDown} />
-//                       )}
-//                     </span>
-//                   </p>
-//                   {expandedComments[index] && (
-//                     <div className="nested-comments">
-//                       {comment.replies && comment.replies.length > 0 ? (
-//                         comment.replies.map((reply, replyIndex) => (
-//                           <div key={replyIndex} className="nested-comment">
-//                             <p>{reply}</p>
-//                           </div>
-//                         ))
-//                       ) : (
-//                         <p>No replies</p>
-//                       )}
-//                     </div>
-//                   )}
-//                 </div>
-//               ))
-//             ) : (
-//               <p>No comments</p>
-//             )}
-//
-//           </div>
-//         </>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default WholePostView;

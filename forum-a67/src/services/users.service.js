@@ -197,13 +197,13 @@ export const postComment = async (postId, author, comment) => {
 };
 
 //Used in WholePostView.jsx
-export const getCommentCountByPost = async (postId) => {
+export const getCommentsByPost = async (postId) => {
   const snapshot = await get(
     query(ref(db, "comments"), orderByChild("postID"), equalTo(postId))
   );
   if (snapshot.exists()) {
     const comments = snapshot.val();
-    return Object.keys(comments).length;
+    return comments;
   } else {
     return 0;
   }
