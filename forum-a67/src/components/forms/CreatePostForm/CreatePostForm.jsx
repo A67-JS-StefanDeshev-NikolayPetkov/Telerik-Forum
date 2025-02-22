@@ -48,7 +48,7 @@ function CreatePostForm({
 
       <div>
         <label htmlFor="post-body">Body</label>
-        <input
+        <textarea
           className="post-input"
           type="text"
           id="post-body"

@@ -87,6 +87,7 @@ const WholePostView = () => {
       post.likeCount++;
     }
   };
+
   ////////////////////
 
   if (error) {
@@ -104,7 +105,9 @@ const WholePostView = () => {
   return (
     <div className="whole-post-view">
       <PostDetails
+        postId={postId}
         post={post}
+        setPost={setPost}
         handleDislike={handleDislike}
         handleLike={handleLike}
         currentUserLike={currentUserLike}

@@ -90,6 +90,11 @@ export const createPostHandle = (title, body, author) => {
   });
 };
 
+export const updatePostHandle = (post, postId) => {
+  const postRef = ref(db, `posts/${postId}`);
+  return set(postRef, { ...post });
+};
+
 ////////////////////////////////////////////////////////////
 
 //Used in Profile.jsx

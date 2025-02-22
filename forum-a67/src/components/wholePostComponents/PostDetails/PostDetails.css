@@ -1,0 +1,6 @@
+.post-details {
+  background-color: red;
+  display: flex;
+  flex-direction: column;
+  width: 100rem;
+}

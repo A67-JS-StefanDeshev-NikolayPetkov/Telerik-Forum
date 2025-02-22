@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
-function EditButton({ enableEdit }) {
+function EditButton({ toggleEditMode }) {
   return (
     <button
       className="edit-btn"
-      onClick={enableEdit}
+      onClick={toggleEditMode}
     >
       <FontAwesomeIcon icon={faEdit} />
     </button>
