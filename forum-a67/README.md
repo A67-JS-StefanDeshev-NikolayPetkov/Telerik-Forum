@@ -31,6 +31,8 @@ Database structure:
 │ │ ├── title
 │ │ ├── commentCount
 │ │ ├── likeCount
+│ │ ├── category
+
 │
 ├── 📁 users
 │ ├── 📄 username
@@ -56,3 +58,8 @@ Database structure:
 ├── 📁 commentLikes
 │ ├── 📄 commentID
 │ │ ├── userID: true
+│
+├── 📁 categories
+│ ├── 📄 category
+│ │ ├── description
+│ │ ├── postCount: 1

@@ -1,197 +1,209 @@
-import { useState, useEffect } from "react";
+//Dependency imports
+import { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import PostPreview from "../../components/PostPreview/PostPreview";
-import SubmitButton from "../../components/SubmitButton/SubmitButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faThumbsUp,
-  faEdit,
-  faThumbsDown,
-  faChevronDown,
-  faChevronUp,
-} from "@fortawesome/free-solid-svg-icons";
+import { AppContext } from "../../context/AppContext";
+
+//Component imports
+import Loader from "../../components/loader/Loader";
+import PostDetails from "../../components/wholePostComponents/PostDetails/PostDetails";
+
+//Misc imports
 import "./WholePostView.css";
+
+//Services imports
 import {
-  postComment,
-  getCommentCountByPost,
+  getPostById,
+  isPostLikedByUser,
   likePost,
   unlikePost,
-  isPostLikedByUser,
-  getPostById,
 } from "../../services/users.service";
 
 const WholePostView = () => {
+  //Context
+  const { user } = useContext(AppContext);
   const { postId } = useParams();
   const [post, setPost] = useState(null);
-  const [isLiked, setIsLiked] = useState(false);
-  const [isContentExpanded, setIsContentExpanded] = useState(false);
-  const [expandedComments, setExpandedComments] = useState({});
-  const [newComment, setNewComment] = useState("");
-  const [commentCount, setCommentCount] = useState(0);
-  const [likeCount, setLikeCount] = useState(0);
-  const [author, setAuthor] = useState("");
-  const [currentUser, setCurrentUser] = useState(""); // Replace with actual current user logic
+  const [currentUserLike, setCurrentUserLike] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  ////////////////////
+  //Get initial data
+  ////////////////////
+
+  ////////////////////
   useEffect(() => {
-    const fetchPostData = async () => {
+    const fetchData = async function () {
+      try {
+        await Promise.all([fetchIsLiked(), fetchPostData()]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const fetchPostData = async () => {
+    try {
       const postData = await getPostById(postId);
       setPost(postData);
-      setLikeCount(postData.likes);
-      setAuthor(postData.author);
-    };
-
-    const fetchCommentCount = async () => {
-      const count = await getCommentCountByPost(postId);
-      setCommentCount(count);
-    };
-
-    const checkIfLiked = async () => {
-      const liked = await isPostLikedByUser(postId, currentUser);
-      setIsLiked(liked);
-    };
-
-    fetchPostData();
-    fetchCommentCount();
-    checkIfLiked();
-  }, [postId, currentUser]);
-
-  const handleLikeClick = async () => {
-    if (isLiked) {
-      await unlikePost(postId, currentUser);
-      setIsLiked(false);
-      setLikeCount(likeCount - 1);
-    } else {
-      await likePost(postId, currentUser);
-      setIsLiked(true);
-      setLikeCount(likeCount + 1);
+    } catch (error) {
+      setError(error);
     }
   };
 
-  const toggleContentVisibility = () => {
-    setIsContentExpanded(!isContentExpanded);
+  const fetchIsLiked = async () => {
+    const isLiked = await isPostLikedByUser(postId, user.displayName);
+    setCurrentUserLike(isLiked);
   };
+  ////////////////////
 
-  const toggleCommentVisibility = (index) => {
-    setExpandedComments((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
-  };
+  ////////////////////
+  //Handle like/dislike
+  ////////////////////
 
-  const handleCommentSubmit = async () => {
-    if (newComment.trim()) {
-      await postComment(postId, currentUser, newComment);
-      setNewComment("");
-      const count = await getCommentCountByPost(postId);
-      setCommentCount(count);
+  ////////////////////
+  const handleLike = async function () {
+    setCurrentUserLike(true);
+    post.likeCount = post.likeCount + 1 || 1;
+
+    try {
+      await likePost(postId, user.displayName);
+    } catch (error) {
+      setCurrentUserLike(true);
+      post.likeCount--;
     }
   };
 
-  if (!post) {
-    return <div>Loading...</div>;
+  const handleDislike = async function () {
+    setCurrentUserLike(false);
+    post.likeCount = post.likeCount - 1;
+
+    try {
+      await unlikePost(postId, user.displayName);
+    } catch {
+      setCurrentUserLike(true);
+      post.likeCount++;
+    }
+  };
+  ////////////////////
+
+  if (error) {
+    return <p>Error: {error.message}</p>;
   }
+
+  //If getting
+  if (loading) {
+    return <Loader />;
+  }
+
+  //Editorial rights
+  const isAuthor = post.author === user.displayName;
 
   return (
     <div className="whole-post-view">
-      <PostPreview
-        author={author}
-        title={post.title}
-        body={post.body}
-        likes={likeCount}
-        comments={post.comments}
-        commentCount={commentCount}
-        isContentExpanded={isContentExpanded}
-        toggleContentVisibility={toggleContentVisibility}
-        createdOn={post.createdOn}
-      />
-      {post.body ? (
-        <p>
-          {isContentExpanded ? post.body : `${post.body.substring(0, 10)}...`}
-          <span onClick={toggleContentVisibility} className="toggle-content">
-            {isContentExpanded ? (
-              <FontAwesomeIcon icon={faChevronUp} />
-            ) : (
-              <FontAwesomeIcon icon={faChevronDown} />
-            )}
-          </span>
-        </p>
-      ) : (
-        <p>No posts</p>
-      )}
-      {isContentExpanded && (
-        <>
-          <div className="post-utility">
-            <SubmitButton
-              className="submit"
-              label={
-                <FontAwesomeIcon icon={isLiked ? faThumbsDown : faThumbsUp} />
-              }
-              onClick={handleLikeClick}
-            />
-            {author === currentUser && (
-              <SubmitButton
-                className="submit"
-                label={<FontAwesomeIcon icon={faEdit} />}
-                onClick={() => {}}
-              />
-            )}
-          </div>
-          <div className="comments-section">
-            <h4>Comments ({commentCount})</h4>
-            {post.comments && post.comments.length > 0 ? (
-              post.comments.map((comment, index) => (
-                <div key={index} className="comment">
-                  <p>
-                    {expandedComments[index]
-                      ? comment
-                      : `${comment.substring(0, 10)}...`}
-                    <span
-                      onClick={() => toggleCommentVisibility(index)}
-                      className="toggle-comment"
-                    >
-                      {expandedComments[index] ? (
-                        <FontAwesomeIcon icon={faChevronUp} />
-                      ) : (
-                        <FontAwesomeIcon icon={faChevronDown} />
-                      )}
-                    </span>
-                  </p>
-                  {expandedComments[index] && (
-                    <div className="nested-comments">
-                      {comment.replies && comment.replies.length > 0 ? (
-                        comment.replies.map((reply, replyIndex) => (
-                          <div key={replyIndex} className="nested-comment">
-                            <p>{reply}</p>
-                          </div>
-                        ))
-                      ) : (
-                        <p>No replies</p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))
-            ) : (
-              <p>No comments</p>
-            )}
-            <div className="new-comment">
-              <input
-                type="text"
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Write a comment..."
-              />
-              <SubmitButton
-                className="submit"
-                label="Submit"
-                onClick={handleCommentSubmit}
-              />
-            </div>
-          </div>
-        </>
-      )}
+      <PostDetails
+        post={post}
+        handleDislike={handleDislike}
+        handleLike={handleLike}
+        currentUserLike={currentUserLike}
+        isAuthor={isAuthor}
+      ></PostDetails>
     </div>
   );
 };
 
 export default WholePostView;
+
+// import {
+//   postComment,
+//   getCommentCountByPost,
+// } from "../../services/users.service";
+
+// const WholePostView = () => {
+//   const [newComment, setNewComment] = useState("");
+//   const [commentCount, setCommentCount] = useState(0);
+
+//   useEffect(() => {
+
+//     const fetchCommentCount = async () => {
+//       const count = await getCommentCountByPost(postId);
+//       setCommentCount(count);
+//     };
+
+//     fetchCommentCount();
+//   }, []);
+
+//   const handleCommentSubmit = async () => {
+//     if (newComment.trim()) {
+//       await postComment(postId, currentUser, newComment);
+//       setNewComment("");
+//       const count = await getCommentCountByPost(postId);
+//       setCommentCount(count);
+//     }
+//   };
+
+//   return (
+//     <div className="whole-post-view">
+//
+//           </div>
+//           <div className="comments-section">
+//             <h4>Comments ({commentCount})</h4>
+//             {post.comments && post.comments.length > 0 ? (
+//               post.comments.map((comment, index) => (
+//                 <div key={index} className="comment">
+//                   <p>
+//                     {expandedComments[index]
+//                       ? comment
+//                       : `${comment.substring(0, 10)}...`}
+//                     <span
+//                       onClick={() => toggleCommentVisibility(index)}
+//                       className="toggle-comment"
+//                     >
+//                       {expandedComments[index] ? (
+//                         <FontAwesomeIcon icon={faChevronUp} />
+//                       ) : (
+//                         <FontAwesomeIcon icon={faChevronDown} />
+//                       )}
+//                     </span>
+//                   </p>
+//                   {expandedComments[index] && (
+//                     <div className="nested-comments">
+//                       {comment.replies && comment.replies.length > 0 ? (
+//                         comment.replies.map((reply, replyIndex) => (
+//                           <div key={replyIndex} className="nested-comment">
+//                             <p>{reply}</p>
+//                           </div>
+//                         ))
+//                       ) : (
+//                         <p>No replies</p>
+//                       )}
+//                     </div>
+//                   )}
+//                 </div>
+//               ))
+//             ) : (
+//               <p>No comments</p>
+//             )}
+//             <div className="new-comment">
+//               <input
+//                 type="text"
+//                 value={newComment}
+//                 onChange={(e) => setNewComment(e.target.value)}
+//                 placeholder="Write a comment..."
+//               />
+//               <SubmitButton
+//                 className="submit"
+//                 label="Submit"
+//                 onClick={handleCommentSubmit}
+//               />
+//             </div>
+//           </div>
+//         </>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default WholePostView;

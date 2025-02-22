@@ -8,8 +8,17 @@ import { useRef, useEffect } from "react";
 import SubmitButton from "../../SubmitButton/SubmitButton";
 import FieldError from "../FieldError/FieldError";
 
-function CreatePostForm({ handleInput, handleSubmit, formData, errors }) {
+function CreatePostForm({
+  handleInput,
+  handleSubmit,
+  formData,
+  errors,
+  label,
+}) {
   const paragraphRef = useRef(null);
+  useEffect(() => {
+    console.log(formData);
+  }, []);
 
   useEffect(() => {
     if (errors.message) paragraphRef.current.focus();
@@ -65,7 +74,7 @@ function CreatePostForm({ handleInput, handleSubmit, formData, errors }) {
         </div>
       )}
 
-      <SubmitButton label="Post"></SubmitButton>
+      <SubmitButton label={label}></SubmitButton>
     </form>
   );
 }

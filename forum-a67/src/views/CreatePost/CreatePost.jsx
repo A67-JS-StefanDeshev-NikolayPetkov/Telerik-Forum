@@ -78,6 +78,7 @@ function CreatePost() {
           errors={errors}
           handleInput={handleInput}
           handleSubmit={handleSubmit}
+          label={"post"}
         ></CreatePostForm>
       </StandardCard>
     </ViewContainer>

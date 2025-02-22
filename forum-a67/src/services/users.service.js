@@ -1,153 +1,3 @@
-// import {
-//   get,
-//   set,
-//   ref,
-//   query,
-//   equalTo,
-//   orderByChild,
-//   push,
-// } from "firebase/database";
-// import { db } from "../config/firebase-config";
-
-// export const getUserByHandle = (handle) => {
-//   return get(ref(db, `users/${handle}`));
-// };
-
-// export const getPostsByAuthor = async (author) => {
-//   const snapshot = await get(
-//     query(ref(db, `posts`), orderByChild("author"), equalTo(author))
-//   );
-
-//   if (!snapshot.exists()) return [];
-
-//   const snapshotVal = snapshot.val();
-
-//   const posts = Object.keys(snapshotVal).map((key) => {
-//     const post = snapshotVal[key];
-
-//     return { ...post };
-//   });
-
-//   return posts;
-// };
-
-// export const getAllPosts = async () => {
-//   const snapshot = await get(
-//     query(ref(db, `posts`), orderByChild("createdOn"))
-//   );
-
-//   if (!snapshot.exists()) return [];
-
-//   const snapshotVal = snapshot.val();
-
-//   const posts = Object.keys(snapshotVal).map((key) => {
-//     const post = snapshotVal[key];
-//     return { ...post, id: key };
-//   });
-
-//   return posts;
-// };
-
-// export const getPostsByTopic = (topic) => {
-//   return get(ref(db, `posts/${topic}`));
-// };
-
-// export const getCommentsByAuthor = (author) => {
-//   return get(ref(db, `comments/${author}`));
-// };
-
-// export const getCommentsByPost = (post) => {
-//   return get(ref(db, `comments/${post}`));
-// };
-
-// export const getUserCount = async () => {
-//   const snapshot = await get(ref(db, "users"));
-//   if (snapshot.exists()) {
-//     const users = snapshot.val();
-//     return Object.keys(users).length;
-//   } else {
-//     return 0;
-//   }
-// };
-
-// export const getPostCount = async () => {
-//   const snapshot = await get(ref(db, "posts"));
-//   if (snapshot.exists()) {
-//     const posts = snapshot.val();
-//     return Object.keys(posts).length;
-//   } else {
-//     return 0;
-//   }
-// };
-
-// export const getCommentCountByPost = async (postId) => {
-//   const snapshot = await get(
-//     query(ref(db, "comments"), orderByChild("postID"), equalTo(postId))
-//   );
-//   if (snapshot.exists()) {
-//     const comments = snapshot.val();
-//     return Object.keys(comments).length;
-//   } else {
-//     return 0;
-//   }
-// };
-// export const createPostHandle = (title, body, author) => {
-//   const newPostPath = push(ref(db, "posts"));
-
-//   return set(newPostPath, {
-//     id: newPostPath.key,
-//     title,
-//     author: author,
-//     body,
-//     createdOn: Date.now(),
-//     comments: {},
-//     likes: {},
-//   });
-// };
-
-// export const createUserHandle = (
-//   username,
-//   uid,
-//   email,
-//   firstName,
-//   lastName,
-//   number
-// ) => {
-//   return set(ref(db, `users/${username}`), {
-//     username,
-//     uid,
-//     email,
-//     firstName,
-//     lastName,
-//     number,
-//     createdOn: Date.now(),
-//     posts: {},
-//     likedPosts: {},
-//   });
-// };
-
-// export const getUserData = (uid) => {
-//   return get(query(ref(db, "users"), orderByChild("uid"), equalTo(uid)));
-// };
-
-// export const postComment = async (postId, author, comment) => {
-//   const commentsRef = ref(db, `comments`);
-//   const newCommentRef = push(commentsRef);
-//   await set(newCommentRef, {
-//     postID: postId,
-//     author: author,
-//     body: comment,
-//     createdOn: Date.now(),
-//   });
-
-//   const postRef = ref(db, `posts/${postId}`);
-//   const postSnapshot = await get(postRef);
-//   if (postSnapshot.exists()) {
-//     const post = postSnapshot.val();
-//     const commentCount = post.commentCount ? post.commentCount + 1 : 1;
-//     await set(postRef, { ...post, commentCount });
-//   }
-// };
 import {
   get,
   set,
@@ -156,9 +6,13 @@ import {
   equalTo,
   orderByChild,
   push,
+  remove,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
+////////////////////////////////////////////////////////////
+
+//Used in Register.jsx
 export const createUserHandle = (
   username,
   uid,
@@ -178,10 +32,51 @@ export const createUserHandle = (
   });
 };
 
+//Used in Register.jsx
 export const getUserByHandle = (handle) => {
   return get(ref(db, `users/${handle}`));
 };
 
+////////////////////////////////////////////////////////////
+
+//Used in Home.jsx
+export const getAllPosts = async () => {
+  const snapshot = await get(
+    query(ref(db, `posts`), orderByChild("createdOn"))
+  );
+  if (!snapshot.exists()) return [];
+  const snapshotVal = snapshot.val();
+  return Object.keys(snapshotVal).map((key) => ({
+    ...snapshotVal[key],
+    id: key,
+  }));
+};
+
+//Used in Home -> WelcomeSection.jsx
+export const getUserCount = async () => {
+  const snapshot = await get(ref(db, "users"));
+  if (snapshot.exists()) {
+    const users = snapshot.val();
+    return Object.keys(users).length;
+  } else {
+    return 0;
+  }
+};
+
+//Used in Home -> WelcomeSection.jsx
+export const getPostCount = async () => {
+  const snapshot = await get(ref(db, "posts"));
+  if (snapshot.exists()) {
+    const posts = snapshot.val();
+    return Object.keys(posts).length;
+  } else {
+    return 0;
+  }
+};
+
+////////////////////////////////////////////////////////////
+
+//Used in CreatePost.jsx
 export const createPostHandle = (title, body, author) => {
   const newPostRef = push(ref(db, "posts"));
   return set(newPostRef, {
@@ -195,6 +90,9 @@ export const createPostHandle = (title, body, author) => {
   });
 };
 
+////////////////////////////////////////////////////////////
+
+//Used in Profile.jsx
 export const getPostsByAuthor = async (author) => {
   const snapshot = await get(
     query(ref(db, `posts`), orderByChild("author"), equalTo(author))
@@ -213,22 +111,67 @@ export const getPostsByAuthor = async (author) => {
   return posts;
 };
 
+////////////////////////////////////////////////////////////
+
+//Used in AppContext
 export const getUserData = (uid) => {
   return get(query(ref(db, "users"), orderByChild("uid"), equalTo(uid)));
 };
 
-export const getAllPosts = async () => {
-  const snapshot = await get(
-    query(ref(db, `posts`), orderByChild("createdOn"))
-  );
-  if (!snapshot.exists()) return [];
-  const snapshotVal = snapshot.val();
-  return Object.keys(snapshotVal).map((key) => ({
-    ...snapshotVal[key],
-    id: key,
-  }));
+////////////////////////////////////////////////////////////
+
+//Used in WholePostView.jsx
+export const getPostById = async (postId) => {
+  const postRef = ref(db, `posts/${postId}`);
+  const snapshot = await get(postRef);
+  if (snapshot.exists()) {
+    return snapshot.val();
+  } else {
+    throw new Error("Post not found.");
+  }
 };
 
+//Used in WholePostView.jsx
+export const likePost = async (postId, userId) => {
+  //Adds current user to list of people that have liked this post
+  const postLikesRef = ref(db, `postLikes/${postId}/${userId}`);
+  await set(postLikesRef, true);
+
+  //Increases the like count within the post itself
+  const postRef = ref(db, `posts/${postId}`);
+  const postSnapshot = await get(postRef);
+  if (postSnapshot.exists()) {
+    const post = postSnapshot.val();
+    const likeCount = post.likeCount ? post.likeCount + 1 : 1;
+    await set(postRef, { ...post, likeCount });
+  }
+};
+
+//Used in WholePostView.jsx
+export const unlikePost = async (postId, userId) => {
+  //Removes current user from list of people that have liked this post
+  const postLikesRef = ref(db, `postLikes/${postId}/${userId}`);
+  await remove(postLikesRef);
+
+  //Decreases the like count in the post itself
+  const postRef = ref(db, `posts/${postId}`);
+  const postSnapshot = await get(postRef);
+  if (postSnapshot.exists()) {
+    const post = postSnapshot.val();
+    const likeCount = post.likeCount ? post.likeCount - 1 : 0;
+    await set(postRef, { ...post, likeCount });
+  }
+};
+
+//Used in WholePostView.jsx
+export const isPostLikedByUser = async (postId, userId) => {
+  //Checks if the user has liked this post
+  const postLikesRef = ref(db, `postLikes/${postId}/${userId}`);
+  const snapshot = await get(postLikesRef);
+  return snapshot.exists();
+};
+
+//Used in WholePostView.jsx
 export const postComment = async (postId, author, comment) => {
   const commentsRef = ref(db, `comments`);
   const newCommentRef = push(commentsRef);
@@ -248,6 +191,7 @@ export const postComment = async (postId, author, comment) => {
   }
 };
 
+//Used in WholePostView.jsx
 export const getCommentCountByPost = async (postId) => {
   const snapshot = await get(
     query(ref(db, "comments"), orderByChild("postID"), equalTo(postId))
@@ -257,67 +201,5 @@ export const getCommentCountByPost = async (postId) => {
     return Object.keys(comments).length;
   } else {
     return 0;
-  }
-};
-
-export const getUserCount = async () => {
-  const snapshot = await get(ref(db, "users"));
-  if (snapshot.exists()) {
-    const users = snapshot.val();
-    return Object.keys(users).length;
-  } else {
-    return 0;
-  }
-};
-
-export const getPostCount = async () => {
-  const snapshot = await get(ref(db, "posts"));
-  if (snapshot.exists()) {
-    const posts = snapshot.val();
-    return Object.keys(posts).length;
-  } else {
-    return 0;
-  }
-};
-
-export const likePost = async (postId, userId) => {
-  const postLikesRef = ref(db, `postLikes/${postId}/${userId}`);
-  await set(postLikesRef, true);
-
-  const postRef = ref(db, `posts/${postId}`);
-  const postSnapshot = await get(postRef);
-  if (postSnapshot.exists()) {
-    const post = postSnapshot.val();
-    const likeCount = post.likeCount ? post.likeCount + 1 : 1;
-    await set(postRef, { ...post, likeCount });
-  }
-};
-
-export const unlikePost = async (postId, userId) => {
-  const postLikesRef = ref(db, `postLikes/${postId}/${userId}`);
-  await remove(postLikesRef);
-
-  const postRef = ref(db, `posts/${postId}`);
-  const postSnapshot = await get(postRef);
-  if (postSnapshot.exists()) {
-    const post = postSnapshot.val();
-    const likeCount = post.likeCount ? post.likeCount - 1 : 0;
-    await set(postRef, { ...post, likeCount });
-  }
-};
-
-export const isPostLikedByUser = async (postId, userId) => {
-  const postLikesRef = ref(db, `postLikes/${postId}/${userId}`);
-  const snapshot = await get(postLikesRef);
-  return snapshot.exists();
-};
-
-export const getPostById = async (postId) => {
-  const postRef = ref(db, `posts/${postId}`);
-  const snapshot = await get(postRef);
-  if (snapshot.exists()) {
-    return snapshot.val();
-  } else {
-    return null;
   }
 };

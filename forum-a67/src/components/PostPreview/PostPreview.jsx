@@ -1,24 +1,28 @@
-import { useNavigate } from "react-router-dom";
 import "./PostPreview.css";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "../../context/AppContext";
 
 const PostPreview = ({ post, commentCount }) => {
   const navigate = useNavigate();
+  const { user } = useContext(AppContext);
 
-  const handleClick = () => {
-    navigate(`/post/${post.id}`);
+  const onPostPreviewClick = function () {
+    if (!user) return alert("You must be signed in to view posts!");
+
+    return navigate(`/post/${post.id}`, { state: post });
   };
 
-  if (!post) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div className="post-preview" onClick={handleClick}>
+    <div
+      className="post-preview"
+      onClick={onPostPreviewClick}
+    >
       <h4>Author: {post.author}</h4>
       <h3>Title: {post.title}</h3>
       <p>Created on: {new Date(post.createdOn).toLocaleDateString()}</p>
       <p>
-        <span>Likes: {post.likes ? post.likes : 0}</span>
+        <span>Likes: {post.likeCount ? post.likeCount : 0}</span>
         <span>Comments: {commentCount}</span>
       </p>
     </div>

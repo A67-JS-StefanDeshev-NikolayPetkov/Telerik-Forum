@@ -22,6 +22,7 @@ function Profile() {
   const [page, setPage] = useState("details");
   const [posts, setPosts] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loadingPosts, setLoadingPosts] = useState(true);
 
   const getPosts = async function () {
     try {
@@ -34,11 +35,19 @@ function Profile() {
   };
 
   useEffect(() => {
-    setPage("details");
-    getPosts();
+    const loadData = async () => {
+      try {
+        setPage("details");
+        await getPosts();
+      } finally {
+        setLoadingPosts(false);
+      }
+    };
+
+    loadData();
   }, []);
 
-  if (loading) return <Loader></Loader>;
+  if (loading || loadingPosts) return <Loader></Loader>;
 
   return (
     <ViewContainer>
