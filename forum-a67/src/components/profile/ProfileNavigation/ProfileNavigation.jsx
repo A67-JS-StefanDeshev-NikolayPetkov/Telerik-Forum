@@ -2,32 +2,14 @@
 import "./ProfileNavigation.css";
 
 //Dependency imports
-import SubmitButton from "../../SubmitButton/SubmitButton";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-function ProfileNavigation({ page }) {
-  const navigate = useNavigate();
-
-  const handleClick = function (e) {
-    if (e.target.name === page) return;
-
-    navigate(`/profile/${e.target.name}`);
-  };
-
+function ProfileNavigation() {
   return (
     <nav className="profile-nav">
-      <SubmitButton
-        label={"details"}
-        onClick={handleClick}
-      ></SubmitButton>
-      <SubmitButton
-        label={"posts"}
-        onClick={handleClick}
-      ></SubmitButton>
-      <SubmitButton
-        label={"comments"}
-        onClick={handleClick}
-      ></SubmitButton>
+      <NavLink to="/profile/details">details</NavLink>
+      <NavLink to="/profile/posts">posts</NavLink>
+      <NavLink to="/profile/comments">comments</NavLink>
     </nav>
   );
 }

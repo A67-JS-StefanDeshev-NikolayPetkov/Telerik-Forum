@@ -27,7 +27,7 @@ function Profile() {
     <ViewContainer>
       <h2>Hi {user.displayName}</h2>
       <StandardCard>
-        <ProfileNavigation page={page}></ProfileNavigation>
+        <ProfileNavigation></ProfileNavigation>
         {page === "details" && <ProfileDetails></ProfileDetails>}
         {page === "posts" && (
           <ProfilePosts username={user.displayName}></ProfilePosts>
