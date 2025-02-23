@@ -29,6 +29,13 @@ function Home() {
     fetchPosts();
   }, []);
 
+  const handleDelete = (postId) => {
+    setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+    setNewPosts((prevNewPosts) =>
+      prevNewPosts.filter((post) => post.id !== postId)
+    );
+  };
+
   return (
     <>
       <div className="home-container">
@@ -40,11 +47,23 @@ function Home() {
         <div className="posts">
           {!user ? (
             <>
-              <PostsContainer title="trending" posts={posts} />
-              <PostsContainer title="recent" posts={posts} />
+              <PostsContainer
+                title="trending"
+                posts={posts}
+                onDelete={handleDelete}
+              />
+              <PostsContainer
+                title="recent"
+                posts={posts}
+                onDelete={handleDelete}
+              />
             </>
           ) : (
-            <PostsContainer title="Newest Posts" posts={newPosts} />
+            <PostsContainer
+              title="Newest Posts"
+              posts={newPosts}
+              onDelete={handledelete}
+            />
           )}
         </div>
       )}

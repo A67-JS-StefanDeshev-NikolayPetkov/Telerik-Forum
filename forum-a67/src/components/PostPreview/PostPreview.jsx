@@ -2,8 +2,9 @@ import "./PostPreview.css";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
+import { deletePost } from "../../services/users.service";
 
-const PostPreview = ({ post, commentCount }) => {
+const PostPreview = ({ post, commentCount, onDelete }) => {
   const navigate = useNavigate();
   const { user } = useContext(AppContext);
 
@@ -13,11 +14,15 @@ const PostPreview = ({ post, commentCount }) => {
     return navigate(`/post/${post.id}`, { state: post });
   };
 
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      await deletePost(post.id);
+      onDelete(post.id);
+    }
+  };
+
   return (
-    <div
-      className="post-preview"
-      onClick={onPostPreviewClick}
-    >
+    <div className="post-preview" onClick={onPostPreviewClick}>
       <h4>Author: {post.author}</h4>
       <h3>Title: {post.title}</h3>
       <p>Created on: {new Date(post.createdOn).toLocaleDateString()}</p>
@@ -25,6 +30,17 @@ const PostPreview = ({ post, commentCount }) => {
         <span>Likes: {post.likeCount ? post.likeCount : 0}</span>
         <span>Comments: {commentCount}</span>
       </p>
+      {user && user.displayName === post.author && (
+        <button
+          className="delete-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete();
+          }}
+        >
+          Delete
+        </button>
+      )}
     </div>
   );
 };

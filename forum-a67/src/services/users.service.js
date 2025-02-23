@@ -7,7 +7,7 @@ import {
   orderByChild,
   push,
   remove,
-  limitToLast
+  limitToLast,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
@@ -212,9 +212,20 @@ export const getCommentsByPost = async (postId) => {
 
 //Used in Home.jsx
 export const getNewPosts = async () => {
-  const snapshot = await get(query(ref(db, `posts`), orderByChild("createdOn"), limitToLast(10)));
+  const snapshot = await get(
+    query(ref(db, `posts`), orderByChild("createdOn"), limitToLast(10))
+  );
   if (!snapshot.exists()) return [];
   const snapshotVal = snapshot.val();
-  const posts = Object.keys(snapshotVal).map((key) => ({ ...snapshotVal[key], id: key }));
+  const posts = Object.keys(snapshotVal).map((key) => ({
+    ...snapshotVal[key],
+    id: key,
+  }));
   return posts.reverse();
+};
+
+//Used in Home.jsx
+export const deletePost = async (postId) => {
+  const postRef = ref(db, `posts/${postId}`);
+  await remove(postRef);
 };
