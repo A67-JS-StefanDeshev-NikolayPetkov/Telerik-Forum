@@ -1,5 +1,5 @@
 import "./PostPreview.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import { deletePost } from "../../services/users.service";
@@ -9,9 +9,13 @@ const PostPreview = ({ post, commentCount, onDelete }) => {
   const navigate = useNavigate();
   const { user } = useContext(AppContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const onPostPreviewClick = function () {
-    if (!user) return alert("You must be signed in to view posts!");
+    if (!user) {
+      setIsLoginModalOpen(true);
+      return;
+    }
 
     return navigate(`/post/${post.id}`);
   };
@@ -20,7 +24,7 @@ const PostPreview = ({ post, commentCount, onDelete }) => {
     await deletePost(post.id);
     onDelete(post.id);
     setIsModalOpen(false);
-    navigate(-1);
+    navigate(-1); // Navigate to the last view
   };
 
   return (
@@ -50,6 +54,17 @@ const PostPreview = ({ post, commentCount, onDelete }) => {
         title="Confirm Delete"
       >
         Are you sure you want to delete this post?
+      </Modal>
+      <Modal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onConfirm={() => navigate("/login")}
+        title="Login Required"
+      >
+        <p>You need to be logged in to view this post.</p>
+        <p>
+          Don't have an account? <Link to="/register">Register here.</Link>
+        </p>
       </Modal>
     </div>
   );
