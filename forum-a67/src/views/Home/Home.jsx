@@ -27,7 +27,7 @@ function Home() {
     };
 
     fetchPosts();
-  }, []);
+  }, [posts]);
 
   const handleDelete = (postId) => {
     setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
@@ -62,7 +62,7 @@ function Home() {
             <PostsContainer
               title="Newest Posts"
               posts={newPosts}
-              onDelete={handledelete}
+              onDelete={handleDelete}
             />
           )}
         </div>
