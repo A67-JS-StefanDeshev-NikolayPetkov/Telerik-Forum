@@ -3,6 +3,7 @@ import "./Profile.css";
 
 //Dependency imports
 import { useState, useEffect, useContext } from "react";
+import { useParams } from "react-router-dom";
 
 //Components imports
 import ViewContainer from "../../components/containers/ViewContainer/ViewContainer";
@@ -18,47 +19,20 @@ import { AppContext } from "../../context/AppContext";
 import { getPostsByAuthor } from "../../services/users.service";
 
 function Profile() {
-  const { user, userData, loading } = useContext(AppContext);
-  const [page, setPage] = useState("details");
-  const [posts, setPosts] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [loadingPosts, setLoadingPosts] = useState(true);
+  const { page } = useParams();
+  const { user } = useContext(AppContext);
 
-  const getPosts = async function () {
-    try {
-      const userPosts = await getPostsByAuthor(user.displayName);
-      setPosts(userPosts);
-    } catch (e) {
-      errors.posts = e.message;
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setPage("details");
-        await getPosts();
-      } finally {
-        setLoadingPosts(false);
-      }
-    };
-
-    loadData();
-  }, []);
-
-  if (loading || loadingPosts) return <Loader></Loader>;
+  if (!user) return <Loader></Loader>;
 
   return (
     <ViewContainer>
       <h2>Hi {user.displayName}</h2>
       <StandardCard>
-        <ProfileNavigation
-          page={page}
-          setPage={setPage}
-        ></ProfileNavigation>
+        <ProfileNavigation page={page}></ProfileNavigation>
         {page === "details" && <ProfileDetails></ProfileDetails>}
-        {page === "posts" && <ProfilePosts posts={posts}></ProfilePosts>}
+        {page === "posts" && (
+          <ProfilePosts username={user.displayName}></ProfilePosts>
+        )}
         {page === "comments" && <ProfileComments></ProfileComments>}
       </StandardCard>
     </ViewContainer>

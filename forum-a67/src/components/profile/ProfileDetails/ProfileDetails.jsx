@@ -2,7 +2,6 @@
 import "./ProfileDetails.css";
 
 //Dependency imports
-import SubmitButton from "../../SubmitButton/SubmitButton";
 import { useContext, useEffect } from "react";
 import { AppContext } from "../../../context/AppContext";
 
@@ -10,15 +9,11 @@ import { AppContext } from "../../../context/AppContext";
 import Loader from "../../loader/Loader";
 
 function ProfileDetails() {
-  const { user, userData } = useContext(AppContext);
+  const { userData } = useContext(AppContext);
 
-  // useEffect(() => {
-  //   console.log(userData);
-  // }, [userData]);
+  if (!userData) return <Loader></Loader>;
 
-  return !userData ? (
-    <Loader></Loader>
-  ) : (
+  return (
     <div className="details-container">
       <h3>Profile Info</h3>
       <div className="details-form-container">

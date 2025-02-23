@@ -25,7 +25,7 @@ function Header() {
       >
         create
       </NavLink>
-      <NavLink to="/profile">profile</NavLink>
+      <NavLink to="/profile/details">profile</NavLink>
       <NavLink to="/home">home</NavLink>
       <NavLink to="/about">about</NavLink>
       <NavLink

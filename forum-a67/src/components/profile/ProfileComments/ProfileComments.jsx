@@ -26,7 +26,7 @@ function ProfileComments() {
       .catch((error) => {
         setError(error.message);
       })
-      .finally(setLoading(false));
+      .finally(() => setLoading(false));
   }, []);
 
   const redirectToWholePostView = function (postId) {
@@ -37,19 +37,17 @@ function ProfileComments() {
 
   if (error) return <p>error</p>;
 
+  if (!comments) return <p>No comments yet.</p>;
+
   return (
     <>
-      {comments ? (
-        comments.map((comment) => (
-          <Comment
-            key={comment[0]}
-            onClick={redirectToWholePostView}
-            comment={comment[1]}
-          ></Comment>
-        ))
-      ) : (
-        <p>No comments yet.</p>
-      )}
+      {comments.map((comment) => (
+        <Comment
+          key={comment[0]}
+          onClick={redirectToWholePostView}
+          comment={comment[1]}
+        ></Comment>
+      ))}
     </>
   );
 }

@@ -30,10 +30,6 @@ function PostDetails({
     setEditMode(!editMode);
   };
 
-  useEffect(() => {
-    console.log(editMode);
-  }, [editMode]);
-
   const validate = function () {
     const newErrors = {};
 
@@ -51,7 +47,6 @@ function PostDetails({
   const handleInput = function (eventTarget) {
     const newFormData = { ...formData };
     newFormData[eventTarget.name] = eventTarget.value;
-    console.log(newFormData);
     setFormData(newFormData);
   };
 

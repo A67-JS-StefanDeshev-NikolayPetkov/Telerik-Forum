@@ -41,7 +41,7 @@ function NavigationRoutes() {
         element={<CreatePost />}
       ></Route>
       <Route
-        path="/profile"
+        path="/profile/:page"
         element={<Profile />}
       ></Route>
       <Route

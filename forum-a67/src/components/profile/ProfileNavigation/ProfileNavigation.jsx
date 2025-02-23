@@ -3,16 +3,15 @@ import "./ProfileNavigation.css";
 
 //Dependency imports
 import SubmitButton from "../../SubmitButton/SubmitButton";
-import { useContext, useEffect } from "react";
-import { AppContext } from "../../../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
-function ProfileNavigation({ page, setPage }) {
-  const { user } = useContext(AppContext);
+function ProfileNavigation({ page }) {
+  const navigate = useNavigate();
 
   const handleClick = function (e) {
     if (e.target.name === page) return;
 
-    setPage(e.target.name);
+    navigate(`/profile/${e.target.name}`);
   };
 
   return (

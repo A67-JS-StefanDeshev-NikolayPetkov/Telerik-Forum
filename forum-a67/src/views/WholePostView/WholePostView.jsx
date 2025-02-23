@@ -49,10 +49,6 @@ const WholePostView = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log(comments);
-  }, [comments]);
-
   const fetchPostData = async () => {
     try {
       const [postData, isLiked, comments] = await Promise.all([
@@ -63,7 +59,6 @@ const WholePostView = () => {
       setPost(postData);
       setCurrentUserLike(isLiked);
       setCommentCount(Object.keys(comments).length);
-      console.log(comments);
       setComments(Object.entries(comments));
     } catch (error) {
       setError(error);
