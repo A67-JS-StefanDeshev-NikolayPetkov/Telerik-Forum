@@ -57,13 +57,16 @@ const PostPreview = ({ post, commentCount, onDelete }) => {
       </Modal>
       <Modal
         isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
+        onClose={() => {
+          navigate("/");
+          setIsLoginModalOpen(false);
+        }}
         onConfirm={() => navigate("/login")}
         title="Login Required"
       >
         <p>You need to be logged in to view this post.</p>
         <p>
-          Don't have an account? <Link to="/register">Register here.</Link>
+          Dont have an account? <Link to="/register">Register here.</Link>
         </p>
       </Modal>
     </div>
