@@ -2,7 +2,7 @@
 import "./Profile.css";
 
 //Dependency imports
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import { useParams } from "react-router-dom";
 
 //Components imports
@@ -16,7 +16,6 @@ import ProfileComments from "../../components/profile/ProfileComments/ProfileCom
 
 //Services
 import { AppContext } from "../../context/AppContext";
-import { getPostsByAuthor } from "../../services/users.service";
 
 function Profile() {
   const { page } = useParams();

@@ -44,7 +44,7 @@ function ProfileComments() {
       {comments.map((comment) => (
         <Comment
           key={comment[0]}
-          onClick={redirectToWholePostView}
+          onClick={() => redirectToWholePostView(comment[1].postID)}
           comment={comment[1]}
         ></Comment>
       ))}

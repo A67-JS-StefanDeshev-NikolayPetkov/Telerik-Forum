@@ -33,6 +33,15 @@ export const createUserHandle = (
   });
 };
 
+export const updateUserHandle = (userDetails) => {
+  try {
+    const postRef = ref(db, `users/${userDetails.username}`);
+    return set(postRef, { ...userDetails });
+  } catch (e) {
+    throw new Error(e.message);
+  }
+};
+
 //Used in Register.jsx
 export const getUserByHandle = (handle) => {
   return get(ref(db, `users/${handle}`));

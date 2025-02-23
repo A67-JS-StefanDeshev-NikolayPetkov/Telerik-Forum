@@ -4,7 +4,7 @@ function Comment({ comment, onClick }) {
   return (
     <div
       className="commentContainer"
-      onClick={() => onClick(comment.postID)}
+      onClick={onClick}
     >
       <p className="comment-author">{comment.author}</p>
       <p className="comment-body">{comment.body}</p>
