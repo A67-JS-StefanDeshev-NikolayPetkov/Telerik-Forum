@@ -7,6 +7,7 @@ import {
   orderByChild,
   push,
   remove,
+  limitToLast
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
@@ -207,4 +208,13 @@ export const getCommentsByPost = async (postId) => {
   } else {
     return 0;
   }
+};
+
+//Used in Home.jsx
+export const getNewPosts = async () => {
+  const snapshot = await get(query(ref(db, `posts`), orderByChild("createdOn"), limitToLast(10)));
+  if (!snapshot.exists()) return [];
+  const snapshotVal = snapshot.val();
+  const posts = Object.keys(snapshotVal).map((key) => ({ ...snapshotVal[key], id: key }));
+  return posts.reverse();
 };
