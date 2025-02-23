@@ -11,7 +11,7 @@ const PostPreview = ({ post, commentCount, onDelete }) => {
   const onPostPreviewClick = function () {
     if (!user) return alert("You must be signed in to view posts!");
 
-    return navigate(`/post/${post.id}`, { state: post });
+    return navigate(`/post/${post.id}`);
   };
 
   const handleDelete = async () => {
@@ -22,7 +22,10 @@ const PostPreview = ({ post, commentCount, onDelete }) => {
   };
 
   return (
-    <div className="post-preview" onClick={onPostPreviewClick}>
+    <div
+      className="post-preview"
+      onClick={onPostPreviewClick}
+    >
       <h4>Author: {post.author}</h4>
       <h3>Title: {post.title}</h3>
       <p>Created on: {new Date(post.createdOn).toLocaleDateString()}</p>

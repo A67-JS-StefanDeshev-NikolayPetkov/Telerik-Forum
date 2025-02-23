@@ -53,6 +53,20 @@ export const getAllPosts = async () => {
   }));
 };
 
+//Used in Home.jsx
+export const getNewPosts = async () => {
+  const snapshot = await get(
+    query(ref(db, `posts`), orderByChild("createdOn"), limitToLast(10))
+  );
+  if (!snapshot.exists()) return [];
+  const snapshotVal = snapshot.val();
+  const posts = Object.keys(snapshotVal).map((key) => ({
+    ...snapshotVal[key],
+    id: key,
+  }));
+  return posts.reverse();
+};
+
 //Used in Home -> WelcomeSection.jsx
 export const getUserCount = async () => {
   const snapshot = await get(ref(db, "users"));
@@ -210,22 +224,26 @@ export const getCommentsByPost = async (postId) => {
   }
 };
 
-//Used in Home.jsx
-export const getNewPosts = async () => {
-  const snapshot = await get(
-    query(ref(db, `posts`), orderByChild("createdOn"), limitToLast(10))
-  );
-  if (!snapshot.exists()) return [];
-  const snapshotVal = snapshot.val();
-  const posts = Object.keys(snapshotVal).map((key) => ({
-    ...snapshotVal[key],
-    id: key,
-  }));
-  return posts.reverse();
-};
-
-//Used in Home.jsx
+//Used in PostPreview (to move to) -> WholePostView.jsx
 export const deletePost = async (postId) => {
   const postRef = ref(db, `posts/${postId}`);
   await remove(postRef);
+};
+
+//Used in ProfileComments.jsx
+export const getCommentsByAuthor = async (author) => {
+  try {
+    const snapshot = await get(
+      query(ref(db, "comments"), orderByChild("author"), equalTo(author))
+    );
+    if (snapshot.exists()) {
+      const comments = snapshot.val();
+
+      return comments;
+    } else {
+      return 0;
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
 };

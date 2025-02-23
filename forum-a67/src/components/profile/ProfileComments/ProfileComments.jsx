@@ -2,20 +2,56 @@
 import "./ProfileComments.css";
 
 //Dependency imports
-import SubmitButton from "../../SubmitButton/SubmitButton";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../../context/AppContext";
+import { getCommentsByAuthor } from "../../../services/users.service";
 
-function ProfileComments({ page, setPage, loading }) {
+//Component imports
+import Loader from "../../loader/Loader";
+import Comment from "../../Comment/Comment";
+
+function ProfileComments() {
   const { user } = useContext(AppContext);
+  const [loading, setLoading] = useState(true);
+  const [comments, setComments] = useState(null);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const handleClick = function (e) {
-    if (e.target.name === page) return;
+  useEffect(() => {
+    getCommentsByAuthor(user.displayName)
+      .then((comments) => {
+        setComments(Object.entries(comments));
+      })
+      .catch((error) => {
+        setError(error.message);
+      })
+      .finally(setLoading(false));
+  }, []);
 
-    setPage(e.target.name);
+  const redirectToWholePostView = function (postId) {
+    return navigate(`/post/${postId}`);
   };
 
-  return loading ? "loading" : <div>comments</div>;
+  if (loading) return <Loader></Loader>;
+
+  if (error) return <p>error</p>;
+
+  return (
+    <>
+      {comments ? (
+        comments.map((comment) => (
+          <Comment
+            key={comment[0]}
+            onClick={redirectToWholePostView}
+            comment={comment[1]}
+          ></Comment>
+        ))
+      ) : (
+        <p>No comments yet.</p>
+      )}
+    </>
+  );
 }
 
 export default ProfileComments;
