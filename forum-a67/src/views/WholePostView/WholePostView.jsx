@@ -18,6 +18,7 @@ import {
   getCommentsByPost,
   deleteComment,
   updateComment,
+  updatePostHandle, // Add this import
 } from "../../services/users.service";
 
 //Misc import
@@ -68,6 +69,13 @@ const WholePostView = () => {
         prevComments.filter(([id]) => id !== commentId)
       );
       setCommentCount((prevCount) => prevCount - 1);
+
+      // Update the comment count in the post object
+      const updatedPost = { ...post, commentCount: post.commentCount - 1 };
+      setPost(updatedPost);
+
+      // Save the updated post to the database
+      await updatePostHandle(updatedPost, postId);
     } catch (error) {
       setError(error);
     }
