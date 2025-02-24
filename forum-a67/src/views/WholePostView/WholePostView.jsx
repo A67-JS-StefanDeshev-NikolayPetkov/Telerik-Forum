@@ -21,16 +21,17 @@ import {
 
 const WholePostView = () => {
   //Context
-  const { user } = useContext(AppContext);
+  const { user, userData } = useContext(AppContext);
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [currentUserLike, setCurrentUserLike] = useState(null);
-  const [commentCount, setCommentCount] = useState(0);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!userData) return;
+
     const fetchData = async function () {
       try {
         await fetchPostData();
@@ -40,7 +41,7 @@ const WholePostView = () => {
     };
 
     fetchData();
-  }, []);
+  }, [userData]);
 
   const fetchPostData = async () => {
     try {
@@ -51,7 +52,6 @@ const WholePostView = () => {
       ]);
       setPost(postData);
       setCurrentUserLike(isLiked);
-      setCommentCount(Object.keys(comments).length);
       setComments(Object.entries(comments));
     } catch (error) {
       setError(error);
@@ -78,14 +78,15 @@ const WholePostView = () => {
         setPost={setPost}
         currentUserLike={currentUserLike}
         isAuthor={isAuthor}
-        commentCount={commentCount}
+        commentCount={post.commentCount}
         setCurrentUserLike={setCurrentUserLike}
+        userData={userData}
       ></PostDetails>
       <CreateComment
+        post={post}
         postId={postId}
         username={user.displayName}
         setComments={setComments}
-        setCommentCount={setCommentCount}
         setCurrentUserLike={setCurrentUserLike}
       ></CreateComment>
       <ViewComments comments={comments}></ViewComments>

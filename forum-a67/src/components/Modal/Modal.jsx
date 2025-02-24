@@ -10,7 +10,7 @@ function Modal({ isOpen, onClose, onConfirm, title, children }) {
         <div className="modal-content">{children}</div>
         <div className="modal-actions">
           <button onClick={onClose}>Cancel</button>
-          <button onClick={onConfirm}>Confirm</button>
+          <button onClick={onConfirm}>Proceed</button>
         </div>
       </div>
     </div>

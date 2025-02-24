@@ -28,7 +28,10 @@ const PostPreview = ({ post, commentCount, onDelete }) => {
   };
 
   return (
-    <div className="post-preview" onClick={onPostPreviewClick}>
+    <div
+      className="post-preview"
+      onClick={onPostPreviewClick}
+    >
       <h4>Author: {post.author}</h4>
       <h3>Title: {post.title}</h3>
       <p>Created on: {new Date(post.createdOn).toLocaleDateString()}</p>
@@ -66,7 +69,7 @@ const PostPreview = ({ post, commentCount, onDelete }) => {
       >
         <p>You need to be logged in to view this post.</p>
         <p>
-          Dont have an account? <Link to="/register">Register here.</Link>
+          Don't have an account? <Link to="/register">Register here.</Link>
         </p>
       </Modal>
     </div>

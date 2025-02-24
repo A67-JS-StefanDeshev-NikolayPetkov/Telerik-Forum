@@ -8,7 +8,7 @@ import {
   getCommentsByPost,
 } from "../../../services/users.service";
 
-function CreateComment({ postId, username, setComments, setCommentCount }) {
+function CreateComment({ post, postId, username, setComments }) {
   const [commentData, setCommentData] = useState("");
 
   const handleCommentSubmit = async () => {
@@ -17,7 +17,7 @@ function CreateComment({ postId, username, setComments, setCommentCount }) {
       const comments = await getCommentsByPost(postId);
 
       setCommentData("");
-      setCommentCount(Object.keys(comments).length);
+      post.commentCount += 1;
       setComments(Object.entries(comments));
     }
   };

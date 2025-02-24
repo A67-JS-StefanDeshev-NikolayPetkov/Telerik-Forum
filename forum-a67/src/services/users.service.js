@@ -8,6 +8,7 @@ import {
   push,
   remove,
   limitToLast,
+  update,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
@@ -114,9 +115,15 @@ export const createPostHandle = (title, body, author) => {
   });
 };
 
-export const updatePostHandle = (post, postId) => {
+export const updatePostHandle = async (post, postId) => {
   const postRef = ref(db, `posts/${postId}`);
-  return set(postRef, { ...post });
+
+  try {
+    const result = await set(postRef, { ...post });
+    return result;
+  } catch (error) {
+    return error;
+  }
 };
 
 ////////////////////////////////////////////////////////////
@@ -236,7 +243,32 @@ export const getCommentsByPost = async (postId) => {
 //Used in PostPreview (to move to) -> WholePostView.jsx
 export const deletePost = async (postId) => {
   const postRef = ref(db, `posts/${postId}`);
-  await remove(postRef);
+  const likeRef = ref(db, `postLikes/${postId}`);
+
+  try {
+    await Promise.all([
+      remove(postRef),
+      remove(likeRef),
+      deleteCommentsByPost(postId),
+    ]);
+  } catch (e) {
+    throw new Error(e);
+  }
+};
+
+export const deleteCommentsByPost = async (postId) => {
+  const snapshot = await get(
+    query(ref(db, "comments"), orderByChild("postID"), equalTo(postId))
+  );
+
+  if (snapshot.exists()) {
+    const refsAndValue = {};
+    snapshot.forEach((snap) => {
+      refsAndValue[`/comments/${snap.key}`] = null;
+    });
+
+    await update(ref(db), refsAndValue);
+  }
 };
 
 //Used in ProfileComments.jsx

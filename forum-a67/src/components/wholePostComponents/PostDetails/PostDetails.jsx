@@ -1,11 +1,17 @@
+//Component imports
+import CreatePostForm from "../../forms/CreatePostForm/CreatePostForm";
 import LikeButton from "../../buttons/LikeButton/LikeButton";
 import EditButton from "../../buttons/EditButton/EditButton";
+import Modal from "../../Modal/Modal";
 
-import CreatePostForm from "../../forms/CreatePostForm/CreatePostForm";
+//Dependency imports
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { useState, useEffect } from "react";
+//Service imports
+import { deletePost } from "../../../services/users.service";
 
-import { updatePostHandle } from "../../../services/users.service";
+//Misc imports
 import "./PostDetails.css";
 
 function PostDetails({
@@ -15,6 +21,7 @@ function PostDetails({
   currentUserLike,
   isAuthor,
   setCurrentUserLike,
+  userData,
 }) {
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
@@ -22,6 +29,8 @@ function PostDetails({
     postTitle: post.title,
     postBody: post.body,
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleEditMode = function () {
     setEditMode(!editMode);
@@ -71,6 +80,17 @@ function PostDetails({
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await deletePost(postId);
+      navigate(-1);
+    } catch (e) {
+      return;
+    } finally {
+      setIsModalOpen(false);
+    }
+  };
+
   return (
     <div className="post-details">
       <p>{post.author}</p>
@@ -102,7 +122,30 @@ function PostDetails({
           currentUserLike={currentUserLike}
         ></LikeButton>
 
-        {isAuthor && <EditButton toggleEditMode={toggleEditMode}></EditButton>}
+        {isAuthor && !post.isDeleted && (
+          <EditButton toggleEditMode={toggleEditMode}></EditButton>
+        )}
+
+        {(isAuthor || userData.admin) && (
+          <button
+            className="delete-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsModalOpen(true);
+            }}
+          >
+            Delete
+          </button>
+        )}
+
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleDelete}
+          title="Confirm Delete"
+        >
+          Are you sure you want to delete this post?
+        </Modal>
       </div>
     </div>
   );
