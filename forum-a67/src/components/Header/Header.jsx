@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 
 function Header() {
-  const { user, onLogout } = useContext(AppContext);
+  const { user, userData, onLogout } = useContext(AppContext);
 
   const loggedOut = (
     <nav>
@@ -25,8 +25,9 @@ function Header() {
       >
         create
       </NavLink>
-      <NavLink to="/profile/details">profile</NavLink>
       <NavLink to="/home">home</NavLink>
+      {userData?.admin && <NavLink to="/admin-panel">admin panel</NavLink>}
+      <NavLink to="/profile/details">profile</NavLink>
       <NavLink to="/about">about</NavLink>
       <NavLink
         to="/home"

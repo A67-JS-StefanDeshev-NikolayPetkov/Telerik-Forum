@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 //Service imports
-import { deletePost } from "../../../services/users.service";
+import { deletePost, updatePostHandle } from "../../../services/users.service";
 
 //Misc imports
 import "./PostDetails.css";
@@ -60,9 +60,8 @@ function PostDetails({
     setFormData(newFormData);
   };
 
-  const handleSubmit = async function (e) {
+  const updatePost = async function (e) {
     e.preventDefault();
-
     if (validate()) {
       try {
         const updatedPost = {
@@ -100,7 +99,7 @@ function PostDetails({
           formData={formData}
           errors={errors}
           handleInput={handleInput}
-          handleSubmit={handleSubmit}
+          handleSubmit={updatePost}
           label={"update"}
         ></CreatePostForm>
       ) : (
@@ -122,9 +121,7 @@ function PostDetails({
           currentUserLike={currentUserLike}
         ></LikeButton>
 
-        {isAuthor && !post.isDeleted && (
-          <EditButton toggleEditMode={toggleEditMode}></EditButton>
-        )}
+        {isAuthor && <EditButton toggleEditMode={toggleEditMode}></EditButton>}
 
         {(isAuthor || userData.admin) && (
           <button

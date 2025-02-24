@@ -4,8 +4,8 @@ import { AppContext } from "../../context/AppContext";
 import { deleteComment, updateComment } from "../../services/users.service";
 import Modal from "../Modal/Modal";
 
-function Comment({ comment, onDelete, onUpdate, commentId }) {
-  const { user } = useContext(AppContext);
+function Comment({ comment, onDelete, onUpdate, commentId, onClick }) {
+  const { user, userData } = useContext(AppContext);
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment.body);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,16 +18,16 @@ function Comment({ comment, onDelete, onUpdate, commentId }) {
 
   const handleEdit = async () => {
     if (isEditing) {
-      console.log(comment);
-      console.log(editedComment);
-
       onUpdate(commentId, { ...comment, body: editedComment });
     }
     setIsEditing(!isEditing);
   };
 
   return (
-    <div className="commentContainer">
+    <div
+      className="commentContainer"
+      onClick={onClick}
+    >
       <p className="comment-author">{comment.author}</p>
       {isEditing ? (
         <textarea
@@ -41,22 +41,30 @@ function Comment({ comment, onDelete, onUpdate, commentId }) {
       <p className="comment-timestamp">
         {new Date(comment.createdOn).toLocaleDateString()}
       </p>
-      {user && user.displayName === comment.author && (
+
+      {/* OnClick is passed by profile component thus if comment component is rendered by profile, dont display edit and delete buttons*/}
+      {!onClick && (
         <div className="comment-actions">
-          <button
-            className="edit-btn"
-            onClick={handleEdit}
-          >
-            {isEditing ? "Save" : "Edit"}
-          </button>
-          <button
-            className="delete-btn"
-            onClick={() => setIsModalOpen(true)}
-          >
-            Delete
-          </button>
+          {user && user.displayName === comment.author && (
+            <button
+              className="edit-btn"
+              onClick={handleEdit}
+            >
+              {isEditing ? "Save" : "Edit"}
+            </button>
+          )}
+          {((user && user.displayName === comment.author) ||
+            userData.admin) && (
+            <button
+              className="delete-btn"
+              onClick={() => setIsModalOpen(true)}
+            >
+              Delete
+            </button>
+          )}
         </div>
       )}
+
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

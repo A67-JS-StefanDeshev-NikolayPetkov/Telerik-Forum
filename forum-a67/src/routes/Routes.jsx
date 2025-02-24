@@ -12,20 +12,52 @@ import CreatePost from "../views/CreatePost/CreatePost";
 import Profile from "../views/Profile/Profile";
 import WholePostView from "../views/WholePostView/WholePostView";
 import NotFound from "../views/NotFound/NotFound";
+import AdminPanel from "../views/AdminPanel/main/AdminPanel";
 function NavigationRoutes() {
   return (
     <Routes>
       <Route
         path="/"
-        element={<Navigate replace to="/home"></Navigate>}
+        element={
+          <Navigate
+            replace
+            to="/home"
+          ></Navigate>
+        }
       ></Route>
-      <Route path="/home" element={<Home />}></Route>
-      <Route path="/login" element={<Login />}></Route>
-      <Route path="/register" element={<Register />}></Route>
-      <Route path="/create-post" element={<CreatePost />}></Route>
-      <Route path="/profile/:page" element={<Profile />}></Route>
-      <Route path="/post/:postId" element={<WholePostView />}></Route>
-      <Route path="*" element={<NotFound />}></Route>
+      <Route
+        path="/home"
+        element={<Home />}
+      ></Route>
+      <Route
+        path="/login"
+        element={<Login />}
+      ></Route>
+      <Route
+        path="/register"
+        element={<Register />}
+      ></Route>
+      <Route
+        path="/create-post"
+        element={<CreatePost />}
+      ></Route>
+      <Route
+        path="/profile/:page"
+        element={<Profile />}
+      ></Route>
+      <Route
+        path="/post/:postId"
+        element={<WholePostView />}
+      ></Route>
+      <Route
+        path="/admin-panel"
+        element={<AdminPanel />}
+      ></Route>
+
+      <Route
+        path="*"
+        element={<NotFound />}
+      ></Route>
       {/*<Route
         path="/posts"
         element={Login}
