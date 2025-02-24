@@ -1,36 +1,40 @@
-//Dependency imports
+//Dependancy imports
 import { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
 
-//Component imports
+//Components imports
 import Loader from "../../components/loader/Loader";
 import PostDetails from "../../components/wholePostComponents/PostDetails/PostDetails";
 import CreateComment from "../../components/wholePostComponents/CreateComment/CreateComment";
 import ViewComments from "../../components/wholePostComponents/ViewComments/ViewComments";
 
-//Misc imports
-import "./WholePostView.css";
-
 //Services imports
 import {
   getPostById,
   isPostLikedByUser,
+  likePost,
+  unlikePost,
   getCommentsByPost,
+  deleteComment,
+  updateComment,
 } from "../../services/users.service";
 
+//Misc import
+import "./WholePostView.css";
+
 const WholePostView = () => {
-  //Context
-  const { user, userData } = useContext(AppContext);
+  const { user } = useContext(AppContext);
   const { postId } = useParams();
   const [post, setPost] = useState(null);
-  const [currentUserLike, setCurrentUserLike] = useState(null);
+  const [currentUserLike, setCurrentUserLike] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async function () {
+    const fetchData = async () => {
       try {
         await fetchPostData();
       } finally {
@@ -50,22 +54,70 @@ const WholePostView = () => {
       ]);
       setPost(postData);
       setCurrentUserLike(isLiked);
+      setCommentCount(Object.keys(comments).length);
       setComments(Object.entries(comments));
     } catch (error) {
       setError(error);
     }
   };
 
-  if (error) {
-    return <p>Error: {error.message}</p>;
-  }
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await deleteComment(commentId);
+      setComments((prevComments) =>
+        prevComments.filter(([id]) => id !== commentId)
+      );
+      setCommentCount((prevCount) => prevCount - 1);
+    } catch (error) {
+      setError(error);
+    }
+  };
 
-  //If getting
-  if (loading) {
-    return <Loader />;
-  }
+  const handleUpdateComment = async (commentId, updatedBody) => {
+    try {
+      await updateComment(commentId, {
+        ...comments[commentId],
+        body: updatedBody,
+      });
+      setComments((prevComments) =>
+        prevComments.map(([id, comment]) =>
+          id === commentId
+            ? [id, { ...comment, body: updatedBody }]
+            : [id, comment]
+        )
+      );
+    } catch (error) {
+      setError(error);
+    }
+  };
 
-  //Editorial rights
+  const handleLike = async () => {
+    setCurrentUserLike(true);
+    post.likeCount = post.likeCount + 1 || 1;
+
+    try {
+      await likePost(postId, user.displayName);
+    } catch (error) {
+      setCurrentUserLike(true);
+      post.likeCount--;
+    }
+  };
+
+  const handleDislike = async () => {
+    setCurrentUserLike(false);
+    post.likeCount = post.likeCount - 1;
+
+    try {
+      await unlikePost(postId, user.displayName);
+    } catch {
+      setCurrentUserLike(true);
+      post.likeCount++;
+    }
+  };
+
+  if (loading) return <Loader />;
+  if (error) return <div>Error: {error.message}</div>;
+
   const isAuthor = post.author === user.displayName;
 
   return (
@@ -74,20 +126,25 @@ const WholePostView = () => {
         postId={postId}
         post={post}
         setPost={setPost}
+        handleDislike={handleDislike}
+        handleLike={handleLike}
         currentUserLike={currentUserLike}
         isAuthor={isAuthor}
-        commentCount={post.commentCount}
-        setCurrentUserLike={setCurrentUserLike}
-        userData={userData}
-      ></PostDetails>
+        commentCount={commentCount}
+      />
       <CreateComment
         post={post}
         postId={postId}
         username={user.displayName}
         setComments={setComments}
-        setCurrentUserLike={setCurrentUserLike}
-      ></CreateComment>
-      <ViewComments comments={comments}></ViewComments>
+        setCommentCount={setCommentCount}
+      />
+      <ViewComments
+        comments={comments}
+        commentCount={commentCount}
+        onDelete={handleDeleteComment}
+        onUpdate={handleUpdateComment}
+      />
     </div>
   );
 };

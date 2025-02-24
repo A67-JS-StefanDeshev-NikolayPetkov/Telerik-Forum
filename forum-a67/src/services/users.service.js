@@ -288,3 +288,15 @@ export const getCommentsByAuthor = async (author) => {
     throw new Error(error);
   }
 };
+
+// Add the deleteComment function
+export const deleteComment = async (commentId) => {
+  const commentRef = ref(db, `comments/${commentId}`);
+  await remove(commentRef);
+};
+
+// Add the updateComment function
+export const updateComment = async (commentId, updatedComment) => {
+  const commentRef = ref(db, `comments/${commentId}`);
+  await set(commentRef, updatedComment);
+};
