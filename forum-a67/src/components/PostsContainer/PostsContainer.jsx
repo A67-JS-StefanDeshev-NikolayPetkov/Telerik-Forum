@@ -1,7 +1,7 @@
 import PostPreview from "../PostPreview/PostPreview";
 import "./PostsContainer.css";
 
-function PostsContainer({ title, posts, onDelete }) {
+function PostsContainer({ title, posts }) {
   return (
     <div className="post-container">
       <h2>{title}</h2>
@@ -11,7 +11,6 @@ function PostsContainer({ title, posts, onDelete }) {
             post={post}
             key={post.id}
             commentCount={post.commentCount}
-            onDelete={onDelete}
           />
         ))
       ) : (

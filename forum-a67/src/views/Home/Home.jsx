@@ -29,13 +29,6 @@ function Home() {
     fetchPosts();
   }, []);
 
-  const handleDelete = (postId) => {
-    setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
-    setNewPosts((prevNewPosts) =>
-      prevNewPosts.filter((post) => post.id !== postId)
-    );
-  };
-
   return (
     <>
       <div className="home-container">
@@ -50,19 +43,16 @@ function Home() {
               <PostsContainer
                 title="trending"
                 posts={posts}
-                onDelete={handleDelete}
               />
               <PostsContainer
                 title="recent"
                 posts={newPosts}
-                onDelete={handleDelete}
               />
             </>
           ) : (
             <PostsContainer
               title="Newest Posts"
               posts={newPosts}
-              onDelete={handleDelete}
             />
           )}
         </div>

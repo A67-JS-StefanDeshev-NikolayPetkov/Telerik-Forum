@@ -16,9 +16,7 @@ function CreatePostForm({
   label,
 }) {
   const paragraphRef = useRef(null);
-  useEffect(() => {
-    console.log(formData);
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (errors.message) paragraphRef.current.focus();

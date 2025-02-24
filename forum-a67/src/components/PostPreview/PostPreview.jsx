@@ -2,13 +2,11 @@ import "./PostPreview.css";
 import { useNavigate, Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AppContext } from "../../context/AppContext";
-import { deletePost } from "../../services/users.service";
 import Modal from "../Modal/Modal";
 
-const PostPreview = ({ post, commentCount, onDelete }) => {
+const PostPreview = ({ post, commentCount }) => {
   const navigate = useNavigate();
   const { user } = useContext(AppContext);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const onPostPreviewClick = function () {
@@ -18,13 +16,6 @@ const PostPreview = ({ post, commentCount, onDelete }) => {
     }
 
     return navigate(`/post/${post.id}`);
-  };
-
-  const handleDelete = async () => {
-    await deletePost(post.id);
-    onDelete(post.id);
-    setIsModalOpen(false);
-    navigate(-1); // Navigate to the last view
   };
 
   return (
@@ -39,25 +30,7 @@ const PostPreview = ({ post, commentCount, onDelete }) => {
         <span>Likes: {post.likeCount ? post.likeCount : 0}</span>
         <span>Comments: {commentCount}</span>
       </p>
-      {user && user.displayName === post.author && (
-        <button
-          className="delete-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsModalOpen(true);
-          }}
-        >
-          Delete
-        </button>
-      )}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={handleDelete}
-        title="Confirm Delete"
-      >
-        Are you sure you want to delete this post?
-      </Modal>
+
       <Modal
         isOpen={isLoginModalOpen}
         onClose={() => {
