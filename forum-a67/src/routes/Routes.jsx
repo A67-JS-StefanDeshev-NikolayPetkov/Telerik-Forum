@@ -11,43 +11,21 @@ import Register from "../views/Register/Register";
 import CreatePost from "../views/CreatePost/CreatePost";
 import Profile from "../views/Profile/Profile";
 import WholePostView from "../views/WholePostView/WholePostView";
-
+import NotFound from "../views/NotFound/NotFound";
 function NavigationRoutes() {
   return (
     <Routes>
       <Route
         path="/"
-        element={
-          <Navigate
-            replace
-            to="/home"
-          ></Navigate>
-        }
+        element={<Navigate replace to="/home"></Navigate>}
       ></Route>
-      <Route
-        path="/home"
-        element={<Home />}
-      ></Route>
-      <Route
-        path="/login"
-        element={<Login />}
-      ></Route>
-      <Route
-        path="/register"
-        element={<Register />}
-      ></Route>
-      <Route
-        path="/create-post"
-        element={<CreatePost />}
-      ></Route>
-      <Route
-        path="/profile/:page"
-        element={<Profile />}
-      ></Route>
-      <Route
-        path="/post/:postId"
-        element={<WholePostView />}
-      ></Route>
+      <Route path="/home" element={<Home />}></Route>
+      <Route path="/login" element={<Login />}></Route>
+      <Route path="/register" element={<Register />}></Route>
+      <Route path="/create-post" element={<CreatePost />}></Route>
+      <Route path="/profile/:page" element={<Profile />}></Route>
+      <Route path="/post/:postId" element={<WholePostView />}></Route>
+      <Route path="*" element={<NotFound />}></Route>
       {/*<Route
         path="/posts"
         element={Login}
