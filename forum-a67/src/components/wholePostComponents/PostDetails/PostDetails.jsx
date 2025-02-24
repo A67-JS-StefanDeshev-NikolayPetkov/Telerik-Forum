@@ -1,4 +1,3 @@
-import DislikeButton from "../../buttons/DislikeButton/DislikeButton";
 import LikeButton from "../../buttons/LikeButton/LikeButton";
 import EditButton from "../../buttons/EditButton/EditButton";
 
@@ -13,11 +12,9 @@ function PostDetails({
   postId,
   post,
   setPost,
-  handleDislike,
-  handleLike,
   currentUserLike,
   isAuthor,
-  commentCount,
+  setCurrentUserLike,
 }) {
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState({});
@@ -28,6 +25,10 @@ function PostDetails({
 
   const toggleEditMode = function () {
     setEditMode(!editMode);
+  };
+
+  const toggleLike = function () {
+    setCurrentUserLike(!currentUserLike);
   };
 
   const validate = function () {
@@ -91,14 +92,15 @@ function PostDetails({
 
       <p>
         <span>Likes: {post.likeCount || 0}</span>
-        <span>Comments: {commentCount || 0}</span>
+        <span>Comments: {post.commentCount || 0}</span>
       </p>
       <div className="post-buttons">
-        {currentUserLike ? (
-          <DislikeButton handleDislike={handleDislike}></DislikeButton>
-        ) : (
-          <LikeButton handleLike={handleLike}></LikeButton>
-        )}
+        <LikeButton
+          post={post}
+          postId={postId}
+          toggleLike={toggleLike}
+          currentUserLike={currentUserLike}
+        ></LikeButton>
 
         {isAuthor && <EditButton toggleEditMode={toggleEditMode}></EditButton>}
       </div>
