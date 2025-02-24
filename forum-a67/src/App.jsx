@@ -12,9 +12,9 @@ import Loader from "./components/loader/Loader";
 
 function App() {
   const [count, setCount] = useState(0);
-  const { loading } = useContext(AppContext);
+  const { user, userData, loading } = useContext(AppContext);
 
-  return loading ? (
+  return loading || (user && !userData) ? (
     <Loader></Loader>
   ) : (
     <>

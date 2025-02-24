@@ -30,8 +30,6 @@ const WholePostView = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!userData) return;
-
     const fetchData = async function () {
       try {
         await fetchPostData();
@@ -41,7 +39,7 @@ const WholePostView = () => {
     };
 
     fetchData();
-  }, [userData]);
+  }, []);
 
   const fetchPostData = async () => {
     try {

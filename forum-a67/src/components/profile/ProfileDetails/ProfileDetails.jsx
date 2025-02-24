@@ -16,8 +16,6 @@ function ProfileDetails() {
 
   const toggleEditMode = () => setEditMode(!editMode);
 
-  if (!userData) return <Loader></Loader>;
-
   return (
     <div className="details-container">
       <h3>Profile Info</h3>
