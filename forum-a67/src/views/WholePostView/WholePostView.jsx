@@ -9,42 +9,28 @@ import PostDetails from "../../components/wholePostComponents/PostDetails/PostDe
 import CreateComment from "../../components/wholePostComponents/CreateComment/CreateComment";
 import ViewComments from "../../components/wholePostComponents/ViewComments/ViewComments";
 
+//Misc imports
+import "./WholePostView.css";
+
 //Services imports
 import {
   getPostById,
   isPostLikedByUser,
-  likePost,
-  unlikePost,
   getCommentsByPost,
   deleteComment,
   updateComment,
   updatePostHandle, // Add this import
 } from "../../services/users.service";
 
-//Misc import
-import "./WholePostView.css";
-
 const WholePostView = () => {
-  const { user } = useContext(AppContext);
+  //Context
+  const { user, userData } = useContext(AppContext);
   const { postId } = useParams();
   const [post, setPost] = useState(null);
-  const [currentUserLike, setCurrentUserLike] = useState(false);
-  const [commentCount, setCommentCount] = useState(0);
+  const [currentUserLike, setCurrentUserLike] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await fetchPostData();
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const fetchPostData = async () => {
     try {
@@ -55,20 +41,30 @@ const WholePostView = () => {
       ]);
       setPost(postData);
       setCurrentUserLike(isLiked);
-      setCommentCount(Object.keys(comments).length);
       setComments(Object.entries(comments));
     } catch (error) {
       setError(error);
     }
   };
 
+  useEffect(() => {
+    const fetchData = async function () {
+      try {
+        await fetchPostData();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleDeleteComment = async (commentId) => {
     try {
-      await deleteComment(commentId);
+      await deleteComment(commentId, postId);
       setComments((prevComments) =>
         prevComments.filter(([id]) => id !== commentId)
       );
-      setCommentCount((prevCount) => prevCount - 1);
 
       // Update the comment count in the post object
       const updatedPost = { ...post, commentCount: post.commentCount - 1 };
@@ -81,17 +77,14 @@ const WholePostView = () => {
     }
   };
 
-  const handleUpdateComment = async (commentId, updatedBody) => {
+  const handleUpdateComment = async (commentId, newComment) => {
     try {
       await updateComment(commentId, {
-        ...comments[commentId],
-        body: updatedBody,
+        ...newComment,
       });
       setComments((prevComments) =>
         prevComments.map(([id, comment]) =>
-          id === commentId
-            ? [id, { ...comment, body: updatedBody }]
-            : [id, comment]
+          id === commentId ? [id, { ...newComment }] : [id, comment]
         )
       );
     } catch (error) {
@@ -99,32 +92,9 @@ const WholePostView = () => {
     }
   };
 
-  const handleLike = async () => {
-    setCurrentUserLike(true);
-    post.likeCount = post.likeCount + 1 || 1;
-
-    try {
-      await likePost(postId, user.displayName);
-    } catch (error) {
-      setCurrentUserLike(true);
-      post.likeCount--;
-    }
-  };
-
-  const handleDislike = async () => {
-    setCurrentUserLike(false);
-    post.likeCount = post.likeCount - 1;
-
-    try {
-      await unlikePost(postId, user.displayName);
-    } catch {
-      setCurrentUserLike(true);
-      post.likeCount++;
-    }
-  };
+  if (error) return <div>Error: {error.message}</div>;
 
   if (loading) return <Loader />;
-  if (error) return <div>Error: {error.message}</div>;
 
   const isAuthor = post.author === user.displayName;
 
@@ -134,22 +104,22 @@ const WholePostView = () => {
         postId={postId}
         post={post}
         setPost={setPost}
-        handleDislike={handleDislike}
-        handleLike={handleLike}
         currentUserLike={currentUserLike}
         isAuthor={isAuthor}
-        commentCount={commentCount}
-      />
+        commentCount={post.commentCount}
+        setCurrentUserLike={setCurrentUserLike}
+        userData={userData}
+      ></PostDetails>
       <CreateComment
         post={post}
         postId={postId}
         username={user.displayName}
         setComments={setComments}
-        setCommentCount={setCommentCount}
+        setCurrentUserLike={setCurrentUserLike}
       />
       <ViewComments
         comments={comments}
-        commentCount={commentCount}
+        commentCount={post.commentCount}
         onDelete={handleDeleteComment}
         onUpdate={handleUpdateComment}
       />

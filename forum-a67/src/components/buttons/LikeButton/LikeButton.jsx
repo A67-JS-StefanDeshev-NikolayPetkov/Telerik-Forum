@@ -14,7 +14,6 @@ function LikeButton({ post, postId, toggleLike, currentUserLike }) {
   const handleLike = async function () {
     toggleLike();
     const change = currentUserLike ? -1 : 1;
-
     post.likeCount += change;
 
     try {

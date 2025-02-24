@@ -4,22 +4,24 @@ import { AppContext } from "../../context/AppContext";
 import { deleteComment, updateComment } from "../../services/users.service";
 import Modal from "../Modal/Modal";
 
-function Comment({ comment, onDelete, onUpdate }) {
+function Comment({ comment, onDelete, onUpdate, commentId }) {
   const { user } = useContext(AppContext);
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(comment.body);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDelete = async () => {
-    await deleteComment(comment.id);
-    onDelete(comment.id);
+    await deleteComment(commentId);
+    onDelete(commentId);
     setIsModalOpen(false);
   };
 
   const handleEdit = async () => {
     if (isEditing) {
-      await updateComment(comment.id, { ...comment, body: editedComment });
-      onUpdate(comment.id, editedComment);
+      console.log(comment);
+      console.log(editedComment);
+
+      onUpdate(commentId, { ...comment, body: editedComment });
     }
     setIsEditing(!isEditing);
   };
@@ -41,10 +43,16 @@ function Comment({ comment, onDelete, onUpdate }) {
       </p>
       {user && user.displayName === comment.author && (
         <div className="comment-actions">
-          <button className="edit-btn" onClick={handleEdit}>
+          <button
+            className="edit-btn"
+            onClick={handleEdit}
+          >
             {isEditing ? "Save" : "Edit"}
           </button>
-          <button className="delete-btn" onClick={() => setIsModalOpen(true)}>
+          <button
+            className="delete-btn"
+            onClick={() => setIsModalOpen(true)}
+          >
             Delete
           </button>
         </div>

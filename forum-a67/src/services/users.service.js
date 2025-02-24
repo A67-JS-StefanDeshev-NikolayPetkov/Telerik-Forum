@@ -290,9 +290,22 @@ export const getCommentsByAuthor = async (author) => {
 };
 
 // Add the deleteComment function
-export const deleteComment = async (commentId) => {
-  const commentRef = ref(db, `comments/${commentId}`);
-  await remove(commentRef);
+export const deleteComment = async (commentId, postId) => {
+  try {
+    const commentRef = ref(db, `comments/${commentId}`);
+    await remove(commentRef);
+
+    //Decreases the comment count in the post itself
+    const postRef = ref(db, `posts/${postId}`);
+    const postSnapshot = await get(postRef);
+    if (postSnapshot.exists()) {
+      const post = postSnapshot.val();
+      const commentCount = post.commentCount ? post.commentCount - 1 : 0;
+      await set(postRef, { ...post, commentCount });
+    }
+  } catch (e) {
+    throw new Error(e);
+  }
 };
 
 // Add the updateComment function
