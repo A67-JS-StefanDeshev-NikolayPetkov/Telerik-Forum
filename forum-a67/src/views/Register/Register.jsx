@@ -2,13 +2,13 @@
 import "./Register.css";
 
 //Dependency imports
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { validateUserDetails } from "../../utils/helpers";
+import { useNavigate } from "react-router-dom";
 
 //Component imports
 import RegisterFrom from "../../components/forms/RegisterForm/RegisterForm";
 import StandardCard from "../../components/containers/StandardCard/StandardCard";
-import RegistrationSuccess from "../../components/informational/RegistrationSuccess/RegistrationSuccess";
 
 //Services
 import { AppContext } from "../../context/AppContext";
@@ -18,6 +18,7 @@ import { createUserHandle } from "../../services/users.service";
 
 function Register() {
   const { onLogout } = useContext(AppContext);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -27,12 +28,7 @@ function Register() {
     password: "",
   });
 
-  const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    return setRegistrationSuccess(false);
-  }, []);
 
   const handleInput = function (eventTarget) {
     const newFormData = { ...formData };
@@ -69,28 +65,14 @@ function Register() {
 
         onLogout();
 
-        //reset errors unnecessary? - check later
-        setErrors({});
-
-        setFormData({
-          firstName: "",
-          lastName: "",
-          number: "",
-          username: "",
-          email: "",
-          password: "",
-        });
-
-        setRegistrationSuccess(true);
+        navigate("/registration-success");
       } catch (e) {
-        console.log(e.message);
-        console.log(errors);
         setErrors({ ...errors, message: e.message });
       }
     }
   };
 
-  return !registrationSuccess ? (
+  return (
     <StandardCard>
       <RegisterFrom
         handleSubmit={handleSubmit}
@@ -99,11 +81,6 @@ function Register() {
         errors={errors}
       ></RegisterFrom>
     </StandardCard>
-  ) : (
-    <StandardCard>
-      <RegistrationSuccess></RegistrationSuccess>
-    </StandardCard>
   );
 }
-
 export default Register;

@@ -26,7 +26,7 @@ export function AppContextProvider({ children }) {
     getUserData(user.uid)
       .then((snapshot) => {
         if (!snapshot.exists()) {
-          throw new Error("Something went wrong!");
+          return;
         }
 
         setAppState({

@@ -17,6 +17,7 @@ import AdminPanel from "../views/AdminPanel/main/AdminPanel";
 import ProfileDetails from "../components/profile/ProfileDetails/ProfileDetails";
 import ProfilePosts from "../components/profile/ProfilePosts/ProfilePosts";
 import ProfileComments from "../components/profile/ProfileComments/ProfileComments";
+import RegistrationSuccess from "../components/informational/RegistrationSuccess/RegistrationSuccess";
 
 function NavigationRoutes() {
   return (
@@ -41,6 +42,10 @@ function NavigationRoutes() {
       <Route
         path="/register"
         element={<Register />}
+      ></Route>
+      <Route
+        path="/registration-success"
+        element={<RegistrationSuccess />}
       ></Route>
       <Route
         path="/create-post"
