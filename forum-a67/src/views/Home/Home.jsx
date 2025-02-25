@@ -3,6 +3,7 @@ import { AppContext } from "../../context/AppContext";
 import PostsContainer from "../../components/PostsContainer/PostsContainer";
 import WelcomeSection from "../../components/WelcomeSection/WelcomeSection";
 import Loader from "../../components/loader/Loader";
+import SearchPosts from "../../views/SearchPosts/SearchPosts";
 import { getAllPosts, getNewPosts } from "../../services/users.service";
 import "./Home.css";
 
@@ -38,22 +39,14 @@ function Home() {
         <Loader />
       ) : (
         <div className="posts">
+          <SearchPosts />
           {!user ? (
             <>
-              <PostsContainer
-                title="trending"
-                posts={posts}
-              />
-              <PostsContainer
-                title="recent"
-                posts={newPosts}
-              />
+              <PostsContainer title="trending" posts={posts} />
+              <PostsContainer title="recent" posts={newPosts} />
             </>
           ) : (
-            <PostsContainer
-              title="Newest Posts"
-              posts={newPosts}
-            />
+            <PostsContainer title="Newest Posts" posts={newPosts} />
           )}
         </div>
       )}

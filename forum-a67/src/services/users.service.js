@@ -9,6 +9,8 @@ import {
   remove,
   limitToLast,
   update,
+  startAt,
+  endAt,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
@@ -312,4 +314,26 @@ export const deleteComment = async (commentId, postId) => {
 export const updateComment = async (commentId, updatedComment) => {
   const commentRef = ref(db, `comments/${commentId}`);
   await set(commentRef, updatedComment);
+};
+
+// Add the searchPosts function
+export const searchPosts = async (queryText) => {
+  try {
+    const snapshot = await get(ref(db, "posts"));
+    if (snapshot.exists()) {
+      const posts = snapshot.val();
+      const postList = Object.keys(posts).map((key) => ({
+        id: key,
+        ...posts[key],
+      }));
+      const filteredPosts = postList.filter((post) =>
+        post.title.toLowerCase().includes(queryText.toLowerCase())
+      );
+      return filteredPosts;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
 };
