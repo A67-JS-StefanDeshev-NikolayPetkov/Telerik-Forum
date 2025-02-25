@@ -12,7 +12,7 @@ import AdminUsers from "../subViews/AdminUsers/AdminUsers";
 import Loader from "../../../components/loader/Loader";
 
 //Services
-import { getLastFiveUsers } from "../../../services/users.service";
+import { fetchForInfiniteScroll } from "../../../services/users.service";
 
 function AdminPanel() {
   const { user, userData } = useContext(AppContext);
@@ -26,7 +26,13 @@ function AdminPanel() {
     setLoading(true);
 
     try {
-      getLastFiveUsers(lastRenderedUser).then((newUsers) => {
+      fetchForInfiniteScroll(
+        lastRenderedUser,
+        "users",
+        "createdOn",
+        10,
+        false
+      ).then((newUsers) => {
         if (newUsers.length > 0) {
           setUsers([...users, ...newUsers]);
           setLastRenderedUser(newUsers[newUsers.length - 1][1]);
@@ -51,6 +57,10 @@ function AdminPanel() {
   useEffect(() => {
     loadMoreUsers();
   }, []);
+
+  useEffect(() => {
+    console.log(users);
+  }, [users]);
 
   //If not logged in or not an admin deny access
   if (!user || !userData.admin) return <p>Access denied.</p>;

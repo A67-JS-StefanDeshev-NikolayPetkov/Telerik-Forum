@@ -13,6 +13,7 @@ import {
   limitToLast,
   startAt,
   endAt,
+  endBefore,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
@@ -355,34 +356,59 @@ export const searchPosts = async (queryText) => {
   }
 };
 
-export const getLastFiveUsers = async (lastLoadedUserData = null) => {
+/**
+ *
+ * @param {object} latestElement provide the last rendered object so that firebase can retrieve the next 10
+ * @param {string} whatToGet the name of the firebase document we want e.g. users, posts, comments etc
+ * @param {string} orderBy the parameter by which we wish to order what we want to get e.g. createdOn
+ * @param {number} howManyToGet how many to fetch
+ * @param {boolean} ascending true if you wish to get elements in ascending and false to get in descending order
+ * @returns
+ */
+export const fetchForInfiniteScroll = async (
+  latestElement = null,
+  whatToGet,
+  orderBy,
+  howManyToGet,
+  ascending = true
+) => {
   try {
-    let usersQuery = query(
-      ref(db, `users`),
-      orderByChild("createdOn"),
-      limitToFirst(5)
+    let queryResult;
+
+    queryResult = query(
+      ref(db, whatToGet),
+      orderByChild(orderBy),
+      ascending ? limitToFirst(howManyToGet) : limitToLast(howManyToGet)
     );
 
     // If there's a previous last loaded user, fetch after that user's 'createdOn'
-    if (lastLoadedUserData) {
-      usersQuery = query(
-        ref(db, `users`),
-        orderByChild("createdOn"),
-        startAfter(lastLoadedUserData.createdOn),
-        limitToFirst(5)
+    if (latestElement) {
+      queryResult = query(
+        ref(db, whatToGet),
+        orderByChild(orderBy),
+        ascending
+          ? startAfter(latestElement[orderBy])
+          : endBefore(latestElement[orderBy]),
+        ascending ? limitToFirst(howManyToGet) : limitToLast(howManyToGet)
       );
     }
 
-    //Sort the users locally again since firebase messes up for some reason
-    const snapshot = await get(usersQuery);
+    //Sort the whatToGet locally again since firebase messes up for some reason
+    const snapshot = await get(queryResult);
     if (!snapshot.exists()) return [];
     const snapshotVal = snapshot.val();
-    const sortedUsers = Object.entries(snapshotVal).sort(
-      (a, b) => a[1].createdOn - b[1].createdOn
-    );
+
+    const sortedUsers = ascending
+      ? Object.entries(snapshotVal).sort(
+          (a, b) => a[1][orderBy] - b[1][orderBy]
+        )
+      : Object.entries(snapshotVal).sort(
+          (a, b) => b[1][orderBy] - a[1][orderBy]
+        );
+
     return sortedUsers;
   } catch (e) {
-    console.error("Error fetching users:", e);
+    console.error(`Error fetching ${whatToGet}:`, e);
     throw new Error(e);
   }
 };
