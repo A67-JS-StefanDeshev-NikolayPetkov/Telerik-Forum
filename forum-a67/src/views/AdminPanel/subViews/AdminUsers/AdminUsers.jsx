@@ -2,32 +2,31 @@
 import "./AdminUsers.css";
 
 //Dependency imports
-import { useEffect, useState } from "react";
 
 //Components imports
-
+import UserPreview from "../../../../components/UserPreview/UserPreview";
 //Services
 
-function AdminUsers() {
-  const [users, setUsers] = useState(null);
-
-  useEffect(() => {}, []);
-
+function AdminUsers({ users, handleScroll }) {
   if (!users) return <p>No users</p>;
 
   return (
-    <div>
-      {/* {users.length > 0 ? (
-        users.map((user) => (
+    <div
+      onScroll={handleScroll}
+      style={{ overflowY: "auto", height: "80vh" }}
+    >
+      {users.length > 0 ? (
+        users.map(([username, userData]) => (
           <UserPreview
-            user={user}
-            key={user.id}
-            commentCount={user.commentCount}
+            username={username}
+            userData={userData}
+            key={username}
+            commentCount={userData.commentCount}
           />
         ))
       ) : (
         <p>No users available</p>
-      )} */}
+      )}
     </div>
   );
 }

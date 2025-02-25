@@ -2,17 +2,18 @@
 import "./ProfileDetails.css";
 
 //Dependency imports
-import { useContext, useState } from "react";
-import { AppContext } from "../../../context/AppContext";
+import { useOutletContext } from "react-router-dom";
+import { useState } from "react";
 
 //Component imports
-import Loader from "../../loader/Loader";
 import EditProfileDetails from "../EditProfileDetails/EditProfileDetails";
 import EditButton from "../../buttons/EditButton/EditButton";
 
 function ProfileDetails() {
-  const { userData } = useContext(AppContext);
   const [editMode, setEditMode] = useState(false);
+  const { displayUserData, isOwnProfile } = useOutletContext();
+
+  console.log(displayUserData);
 
   const toggleEditMode = () => setEditMode(!editMode);
 
@@ -21,30 +22,33 @@ function ProfileDetails() {
       <h3>Profile Info</h3>
       {editMode ? (
         <EditProfileDetails
-          userData={userData}
+          userData={displayUserData}
           toggleEditMode={toggleEditMode}
         ></EditProfileDetails>
       ) : (
         <div className="details-form-container">
           <div className="details-row">
             <p>First Name:</p>
-            <p>{userData.firstName}</p>
+            <p>{displayUserData.firstName}</p>
           </div>
           <div className="details-row">
             <p>Last Name:</p>
-            <p>{userData.lastName}</p>
+            <p>{displayUserData.lastName}</p>
           </div>
           <div className="details-row">
             <p>Email:</p>
-            <p>{userData.email}</p>
+            <p>{displayUserData.email}</p>
           </div>
           <div className="details-row">
             <p>Mobile:</p>
-            <p>{userData.number}</p>
+            <p>{displayUserData.number}</p>
           </div>
         </div>
       )}
-      <EditButton toggleEditMode={toggleEditMode}></EditButton>
+
+      {isOwnProfile && (
+        <EditButton toggleEditMode={toggleEditMode}></EditButton>
+      )}
     </div>
   );
 }

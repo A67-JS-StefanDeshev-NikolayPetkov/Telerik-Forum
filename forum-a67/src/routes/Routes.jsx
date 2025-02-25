@@ -13,6 +13,11 @@ import Profile from "../views/Profile/Profile";
 import WholePostView from "../views/WholePostView/WholePostView";
 import NotFound from "../views/NotFound/NotFound";
 import AdminPanel from "../views/AdminPanel/main/AdminPanel";
+
+import ProfileDetails from "../components/profile/ProfileDetails/ProfileDetails";
+import ProfilePosts from "../components/profile/ProfilePosts/ProfilePosts";
+import ProfileComments from "../components/profile/ProfileComments/ProfileComments";
+
 function NavigationRoutes() {
   return (
     <Routes>
@@ -42,9 +47,26 @@ function NavigationRoutes() {
         element={<CreatePost />}
       ></Route>
       <Route
-        path="/profile/:page"
+        path="/profile/:username"
         element={<Profile />}
-      ></Route>
+      >
+        <Route
+          index
+          element={<ProfileDetails></ProfileDetails>}
+        ></Route>
+        <Route
+          path="details"
+          element={<ProfileDetails></ProfileDetails>}
+        ></Route>
+        <Route
+          path="posts"
+          element={<ProfilePosts></ProfilePosts>}
+        ></Route>
+        <Route
+          path="comments"
+          element={<ProfileComments></ProfileComments>}
+        ></Route>
+      </Route>
       <Route
         path="/post/:postId"
         element={<WholePostView />}

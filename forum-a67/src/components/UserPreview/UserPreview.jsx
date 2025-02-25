@@ -2,15 +2,17 @@
 import "./UserPreview.css";
 
 //Dependency imports
+import { useNavigate } from "react-router-dom";
 
 //Components imports
-import Profile from "../../views/Profile";
+import Profile from "../../views/Profile/Profile";
 
 //Services
 
-const UserPreview = ({ user }) => {
+const UserPreview = ({ username, userData }) => {
+  const navigate = useNavigate();
   function goToProfile() {
-    return <Profile username={user.username}></Profile>;
+    navigate(`/profile/${username}`);
   }
 
   return (
@@ -18,10 +20,10 @@ const UserPreview = ({ user }) => {
       className="post-preview"
       onClick={goToProfile}
     >
-      <h4>Username: {user.username}</h4>
-      <h3>Joined on: {new Date(user.createdOn).toLocaleDateString()}</h3>
-      <p>Posts: {user.posts}</p>
-      <p>Comments: {user.comments}</p>
+      <h4>Username: {username}</h4>
+      <h3>Joined on: {new Date(userData.createdOn).toLocaleDateString()}</h3>
+      <p>Posts: {userData.posts}</p>
+      <p>Comments: {userData.comments}</p>
     </div>
   );
 };

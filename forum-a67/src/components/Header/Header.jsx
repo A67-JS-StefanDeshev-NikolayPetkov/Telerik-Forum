@@ -27,7 +27,7 @@ function Header() {
       </NavLink>
       <NavLink to="/home">home</NavLink>
       {userData?.admin && <NavLink to="/admin-panel">admin panel</NavLink>}
-      <NavLink to="/profile/details">profile</NavLink>
+      <NavLink to={`/profile/${user?.displayName}`}>profile</NavLink>
       <NavLink to="/about">about</NavLink>
       <NavLink
         to="/home"

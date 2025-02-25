@@ -7,8 +7,10 @@ import {
   orderByChild,
   push,
   remove,
-  limitToLast,
+  limitToFirst,
   update,
+  startAfter,
+  limitToLast,
   startAt,
   endAt,
 } from "firebase/database";
@@ -48,6 +50,20 @@ export const updateUserHandle = (userDetails) => {
 //Used in Register.jsx
 export const getUserByHandle = (handle) => {
   return get(ref(db, `users/${handle}`));
+};
+
+export const getUserDataByHandle = async (handle) => {
+  try {
+    const snapshot = await get(ref(db, `users/${handle}`));
+
+    if (snapshot.exists()) {
+      return snapshot.val();
+    } else {
+      throw new Error({ message: "No such user" });
+    }
+  } catch (e) {
+    throw new Error({ message: "No such user" });
+  }
 };
 
 ////////////////////////////////////////////////////////////
@@ -335,5 +351,38 @@ export const searchPosts = async (queryText) => {
     }
   } catch (error) {
     throw new Error(error);
+    //Used in Admin Panel
+  }
+};
+
+export const getLastFiveUsers = async (lastLoadedUserData = null) => {
+  try {
+    let usersQuery = query(
+      ref(db, `users`),
+      orderByChild("createdOn"),
+      limitToFirst(5)
+    );
+
+    // If there's a previous last loaded user, fetch after that user's 'createdOn'
+    if (lastLoadedUserData) {
+      usersQuery = query(
+        ref(db, `users`),
+        orderByChild("createdOn"),
+        startAfter(lastLoadedUserData.createdOn),
+        limitToFirst(5)
+      );
+    }
+
+    //Sort the users locally again since firebase messes up for some reason
+    const snapshot = await get(usersQuery);
+    if (!snapshot.exists()) return [];
+    const snapshotVal = snapshot.val();
+    const sortedUsers = Object.entries(snapshotVal).sort(
+      (a, b) => a[1].createdOn - b[1].createdOn
+    );
+    return sortedUsers;
+  } catch (e) {
+    console.error("Error fetching users:", e);
+    throw new Error(e);
   }
 };

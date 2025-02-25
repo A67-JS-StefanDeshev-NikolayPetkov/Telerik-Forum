@@ -2,9 +2,8 @@
 import "./ProfileComments.css";
 
 //Dependency imports
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AppContext } from "../../../context/AppContext";
+import { useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { getCommentsByAuthor } from "../../../services/users.service";
 
 //Component imports
@@ -12,15 +11,16 @@ import Loader from "../../loader/Loader";
 import Comment from "../../Comment/Comment";
 
 function ProfileComments() {
-  const { user } = useContext(AppContext);
   const [loading, setLoading] = useState(true);
-  const [comments, setComments] = useState(null);
+  const [comments, setComments] = useState(0);
   const [error, setError] = useState(null);
+  const { username } = useOutletContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-    getCommentsByAuthor(user.displayName)
+    getCommentsByAuthor(username)
       .then((comments) => {
+        console.log(comments);
         setComments(Object.entries(comments));
       })
       .catch((error) => {
@@ -37,7 +37,7 @@ function ProfileComments() {
 
   if (error) return <p>error</p>;
 
-  if (!comments) return <p>No comments yet.</p>;
+  if (comments.length < 1) return <p>No comments yet.</p>;
 
   return (
     <>
