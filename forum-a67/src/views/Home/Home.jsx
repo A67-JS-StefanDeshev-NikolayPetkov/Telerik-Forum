@@ -12,6 +12,7 @@ function Home() {
   const [posts, setPosts] = useState([]);
   const [newPosts, setNewPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchResults, setSearchResults] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -30,6 +31,10 @@ function Home() {
     fetchPosts();
   }, []);
 
+  const handleSearchResults = (results) => {
+    setSearchResults(results);
+  };
+
   return (
     <>
       <div className="home-container">
@@ -39,14 +44,20 @@ function Home() {
         <Loader />
       ) : (
         <div className="posts">
-          <SearchPosts />
-          {!user ? (
-            <>
-              <PostsContainer title="trending" posts={posts} />
-              <PostsContainer title="recent" posts={newPosts} />
-            </>
+          <SearchPosts onSearchResults={handleSearchResults} />
+          {searchResults ? (
+            <PostsContainer title="Search Results" posts={searchResults} />
           ) : (
-            <PostsContainer title="Newest Posts" posts={newPosts} />
+            <>
+              {!user ? (
+                <>
+                  <PostsContainer title="Trending" posts={posts} />
+                  <PostsContainer title="Recent" posts={newPosts} />
+                </>
+              ) : (
+                <PostsContainer title="Newest Posts" posts={newPosts} />
+              )}
+            </>
           )}
         </div>
       )}
