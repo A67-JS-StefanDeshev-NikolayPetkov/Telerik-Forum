@@ -45,10 +45,6 @@ function Profile() {
     fetchUserData();
   }, [username]);
 
-  useEffect(() => {
-    console.log(displayUserData);
-  }, [displayUserData]);
-
   if (loading) return <Loader></Loader>;
 
   if (error) return <p>Something went wrong: ${error}</p>;

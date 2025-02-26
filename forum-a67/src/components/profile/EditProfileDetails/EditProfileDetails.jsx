@@ -27,7 +27,6 @@ function EditProfileDetails({ userData, toggleEditMode }) {
           location.reload();
         })
         .catch((error) => {
-          console.log(error);
           setErrors({ ...errors, message: error });
         });
     }

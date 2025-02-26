@@ -47,7 +47,12 @@ function AdminPanel() {
 
   const handleScroll = (e) => {
     const bottom =
-      e.target.scrollHeight === e.target.scrollTop + e.target.clientHeight;
+      e.target.scrollHeight <=
+      Math.round(e.target.scrollTop + e.target.clientHeight + 1);
+    console.log(
+      e.target.scrollHeight,
+      Math.round(e.target.scrollTop + e.target.clientHeight + 1)
+    );
     if (bottom && !loading) {
       console.log("bottom");
       loadMoreUsers();
@@ -57,10 +62,6 @@ function AdminPanel() {
   useEffect(() => {
     loadMoreUsers();
   }, []);
-
-  useEffect(() => {
-    console.log(users);
-  }, [users]);
 
   //If not logged in or not an admin deny access
   if (!user || !userData.admin) return <p>Access denied.</p>;

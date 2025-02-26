@@ -20,7 +20,6 @@ function ProfileComments() {
   useEffect(() => {
     getCommentsByAuthor(username)
       .then((comments) => {
-        console.log(comments);
         setComments(Object.entries(comments));
       })
       .catch((error) => {
