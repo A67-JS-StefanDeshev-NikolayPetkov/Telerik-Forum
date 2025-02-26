@@ -24,7 +24,8 @@ function Profile() {
 
   const isOwnProfile = username === user.displayName;
 
-  if (!userData) return <p>Access denied</p>;
+  if (!userData || (!userData?.admin && !isOwnProfile))
+    return <p>Access denied</p>;
 
   const fetchUserData = async () => {
     try {
@@ -56,7 +57,7 @@ function Profile() {
       <div>
         <ProfileNavigation username={username}></ProfileNavigation>
         <Outlet
-          context={{ username, displayUserData, isOwnProfile, userData }}
+          context={{ username, displayUserData, isOwnProfile, userData, user }}
         />
       </div>
     </ViewContainer>

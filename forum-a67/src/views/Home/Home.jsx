@@ -110,7 +110,7 @@ function Home() {
         <Loader />
       ) : (
         <div className="posts">
-          <SearchPosts onSearchResults={handleSearchResults} />
+          {user && <SearchPosts onSearchResults={handleSearchResults} />}
           {searchResults ? (
             <PostsContainer
               title="Search Results"

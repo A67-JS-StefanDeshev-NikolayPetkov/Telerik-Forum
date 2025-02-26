@@ -1,16 +1,18 @@
 import "./EditProfileDetails.css";
 import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
 
 //Component imports
 import SubmitButton from "../../SubmitButton/SubmitButton";
 import FieldError from "../../forms/FieldError/FieldError";
 
 import { validateUserDetails } from "../../../utils/helpers";
-import { updateUserHandle } from "../../../services/users.service";
+import { updateUserDetails } from "../../../services/users.service";
 
 function EditProfileDetails({ userData, toggleEditMode }) {
   const [formData, setFormData] = useState(userData);
   const [errors, setErrors] = useState({});
+  const { displayUserData, user } = useOutletContext();
 
   const handleInput = function (eventTarget) {
     const newFormData = { ...formData };
@@ -21,7 +23,12 @@ function EditProfileDetails({ userData, toggleEditMode }) {
   function handleSubmit(e) {
     e.preventDefault();
     if (validateUserDetails(formData, setErrors)) {
-      updateUserHandle(formData)
+      const newUserDetails = { ...displayUserData };
+      newUserDetails.firstName = formData.firstName;
+      newUserDetails.lastName = formData.lastName;
+      newUserDetails.number = formData.number;
+
+      updateUserDetails(user.displayName, newUserDetails)
         .then(() => {
           toggleEditMode();
           location.reload();
