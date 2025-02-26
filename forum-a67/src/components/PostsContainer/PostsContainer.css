@@ -1,12 +1,76 @@
+/* Main Post Container */
 .post-container {
   display: flex;
   flex-direction: column;
-  align-items: start;
-  gap: 3rem;
-  margin: 20px 0;
-  padding: 20px;
-  border: 1px solid #b82c2c;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(184, 44, 44, 0.911);
+  align-items: center;
   width: 100%;
+  max-width: 800px; /* Adjust for your layout */
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Title */
+.post-container h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Scrollable Posts List */
+.posts-container {
+  width: 100%;
+  max-width: 100%;
+  height: 80vh;
+  overflow-y: auto;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+.posts-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.posts-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.posts-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.posts-container::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Message when no posts are available */
+.posts-container p {
+  font-size: 16px;
+  color: #555;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .post-container {
+    padding: 15px;
+  }
+
+  .post-container h2 {
+    font-size: 20px;
+  }
+
+  .posts-container {
+    height: 70vh;
+  }
 }

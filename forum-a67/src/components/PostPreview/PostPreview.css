@@ -1,9 +1,70 @@
+/* Post Preview */
 .post-preview {
-  border: 1px solid grey;
-  border-radius: 2rem;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  background-color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .post-preview:hover {
-  cursor: pointer;
+  transform: scale(1.02);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Title Style (ensure breaking on long text) */
+.post-preview h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  word-wrap: break-word; /* Ensures word breaks */
+  overflow-wrap: break-word; /* Prevents long words from overflowing */
+  hyphens: auto; /* Automatic hyphenation for longer words */
+  margin: 0;
+}
+
+/* Author, Date, Likes, Comments */
+.post-preview h4,
+.post-preview p {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+/* Modal - Styling for Login required */
+.Modal__content {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.Modal__content p {
+  font-size: 14px;
+  color: #444;
+}
+
+.Modal__content a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.Modal__content a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Styles for Post Preview */
+@media (max-width: 768px) {
+  .post-preview {
+    padding: 15px;
+  }
+
+  .post-preview h3 {
+    font-size: 18px;
+  }
 }

@@ -1,0 +1,157 @@
+/* ViewContainer */
+.view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  max-width: 1000px; /* Ensures container width doesn't exceed 1000px */
+  margin: 0 auto; /* Centers the container */
+  box-sizing: border-box;
+}
+
+/* Admin Panel Title */
+.view-container h2 {
+  font-size: 28px;
+  color: #333;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Section Title */
+.view-container h3 {
+  font-size: 22px;
+  color: #555;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: left;
+  width: 100%;
+}
+
+/* Admin Users Section */
+.admin-users-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .view-container {
+    padding: 15px; /* Reduce padding for smaller screens */
+  }
+
+  .view-container h2 {
+    font-size: 24px; /* Smaller font size for the title */
+  }
+
+  .view-container h3 {
+    font-size: 20px; /* Smaller font size for section titles */
+  }
+}
+
+@media (max-width: 480px) {
+  .view-container {
+    padding: 10px; /* Further reduce padding on very small screens */
+  }
+
+  .view-container h2 {
+    font-size: 20px; /* Even smaller font size for titles */
+  }
+
+  .view-container h3 {
+    font-size: 18px; /* Adjust section title font size */
+  }
+}
+
+/* Search Bar Container */
+.search-users {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 800px; /* Max width for the search bar */
+  margin: 0 auto 20px auto; /* Centers the search bar and adds space below */
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+/* Search Input Field */
+.search-users input {
+  flex: 1; /* Makes the input field take available space */
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-users input:focus {
+  border-color: #4caf50; /* Green border when focused */
+}
+
+/* Search Dropdown */
+.search-users select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-users select:focus {
+  border-color: #4caf50; /* Green border when focused */
+}
+
+/* Submit Button */
+.search-users button {
+  padding: 10px 15px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.search-users button:hover {
+  background-color: #4caf50; /* Darker blue when hovered */
+}
+
+.search-users button:disabled {
+  background-color: #ccc; /* Disabled button color */
+  cursor: not-allowed;
+}
+
+/* Cancel Search Button */
+.search-users button.cancel-search {
+  background-color: #f44336; /* Red for cancel button */
+  margin-right: 10px;
+}
+
+.search-users button.cancel-search:hover {
+  background-color: #d32f2f; /* Darker red when hovered */
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .search-users {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .search-users input,
+  .search-users select,
+  .search-users button {
+    width: 100%;
+  }
+}

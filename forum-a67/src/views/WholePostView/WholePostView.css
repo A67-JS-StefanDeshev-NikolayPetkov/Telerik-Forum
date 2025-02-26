@@ -1,0 +1,133 @@
+/* Whole Post View Container */
+.whole-post-view {
+  width: 100%;
+  max-width: 1000px; /* Max width for better readability */
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Post Details Section */
+.whole-post-view .post-details {
+  margin-bottom: 30px; /* Space between post details and comment sections */
+}
+
+/* Create Comment Section */
+.whole-post-view .create-comment {
+  margin-bottom: 20px; /* Space between comment input and comment list */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+/* View Comments Section */
+.whole-post-view .view-comments {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+/* Common styling for all comment sections (CreateComment, ViewComments) */
+.whole-post-view .comment-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Comment Form Input */
+.whole-post-view .create-comment input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.whole-post-view .create-comment input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+/* Comment Submit Button */
+.whole-post-view .create-comment button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.whole-post-view .create-comment button:hover {
+  background-color: #0056b3;
+}
+
+.whole-post-view .create-comment button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Comment List (ViewComments) */
+.whole-post-view .view-comments .comment {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.whole-post-view .view-comments .comment .author {
+  font-weight: bold;
+}
+
+.whole-post-view .view-comments .comment .content {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.whole-post-view .view-comments .comment .actions {
+  margin-top: 10px;
+  font-size: 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.whole-post-view .view-comments .comment .actions button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.whole-post-view .view-comments .comment .actions button:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Styling for smaller screens */
+@media (max-width: 768px) {
+  .whole-post-view {
+    padding: 15px;
+  }
+
+  .whole-post-view .create-comment,
+  .whole-post-view .view-comments {
+    padding: 15px;
+  }
+
+  .whole-post-view .comment-section {
+    gap: 10px;
+  }
+
+  .whole-post-view .create-comment input {
+    font-size: 14px;
+  }
+}

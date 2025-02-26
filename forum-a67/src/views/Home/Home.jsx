@@ -97,9 +97,7 @@ function Home() {
   };
 
   useEffect(() => {
-    if (!user) {
-      loadTrendingPosts();
-    }
+    loadTrendingPosts();
     loadNewestPosts();
   }, []);
 

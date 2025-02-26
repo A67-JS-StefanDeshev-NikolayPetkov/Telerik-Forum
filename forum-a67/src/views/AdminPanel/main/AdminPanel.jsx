@@ -94,7 +94,7 @@ function AdminPanel() {
 
   const searchBarMarkup = (
     <div className="search-users">
-      {searchCompleted && <button onClick={cancelSearch}></button>}
+      {searchCompleted && <button onClick={cancelSearch}>X</button>}
       <form onSubmit={handleSearch}>
         <input
           type="text"
@@ -126,14 +126,14 @@ function AdminPanel() {
     <ViewContainer>
       <h2>Admin Panel</h2>
 
-      <StandardCard>
+      <div>
         <h3>Users</h3>
         {searchBarMarkup}
         <AdminUsers
           users={searchCompleted ? searchResult : users}
           handleScroll={handleScroll}
         ></AdminUsers>
-      </StandardCard>
+      </div>
     </ViewContainer>
   );
 }
