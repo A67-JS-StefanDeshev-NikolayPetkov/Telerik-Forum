@@ -259,19 +259,47 @@ export const getCommentsByPost = async (postId) => {
   }
 };
 
+// Add a function to remove a post ID from tags
+const removePostIdFromTags = async (postId, tags) => {
+  for (const tag of tags) {
+    const tagRef = ref(db, `tags/${tag.toLowerCase()}`);
+    const snapshot = await get(tagRef);
+    if (snapshot.exists()) {
+      const tagData = snapshot.val();
+      const postIds = tagData.postIds || [];
+      const updatedPostIds = postIds.filter((id) => id !== postId);
+      if (updatedPostIds.length === 0) {
+        // If no posts are associated with the tag, delete the tag
+        await remove(tagRef);
+      } else {
+        // Otherwise, update the tag with the remaining post IDs
+        await update(tagRef, { postIds: updatedPostIds });
+      }
+    }
+  }
+};
+
 //Used in PostPreview (to move to) -> WholePostView.jsx
 export const deletePost = async (postId) => {
   const postRef = ref(db, `posts/${postId}`);
   const likeRef = ref(db, `postLikes/${postId}`);
+  // const commentRef = ref(db, `comments`);
+  const postSnapshot = await get(postRef);
 
-  try {
-    await Promise.all([
-      remove(postRef),
-      remove(likeRef),
-      deleteCommentsByPost(postId),
-    ]);
-  } catch (e) {
-    throw new Error(e);
+  if (postSnapshot.exists()) {
+    const post = postSnapshot.val();
+    const tags = post.tags || [];
+
+    try {
+      await Promise.all([
+        remove(postRef),
+        remove(likeRef),
+        removePostIdFromTags(postId, tags),
+        deleteCommentsByPost(postId),
+      ]);
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 };
 
@@ -410,5 +438,49 @@ export const fetchForInfiniteScroll = async (
   } catch (e) {
     console.error(`Error fetching ${whatToGet}:`, e);
     throw new Error(e);
+  }
+};
+
+// Add a function to add a tag to the tags collection
+export const addTag = async (tag, postId) => {
+  const tagRef = ref(db, `tags/${tag.toLowerCase()}`);
+  try {
+    const snapshot = await get(tagRef);
+    if (snapshot.exists()) {
+      // If the tag already exists, update the postIds array
+      const tagData = snapshot.val();
+      const postIds = tagData.postIds || [];
+      if (!postIds.includes(postId)) {
+        postIds.push(postId);
+        await update(tagRef, { postIds });
+      }
+    } else {
+      // If the tag does not exist, create it with the postId
+      await set(tagRef, { name: tag.toLowerCase(), postIds: [postId] });
+    }
+  } catch (error) {
+    return error;
+  }
+};
+
+// Add a function to remove a post ID from a tag
+export const removePostIdFromTag = async (tag, postId) => {
+  const tagRef = ref(db, `tags/${tag.toLowerCase()}`);
+  try {
+    const snapshot = await get(tagRef);
+    if (snapshot.exists()) {
+      const tagData = snapshot.val();
+      const postIds = tagData.postIds || [];
+      const updatedPostIds = postIds.filter((id) => id !== postId);
+      if (updatedPostIds.length === 0) {
+        // If no posts are associated with the tag, delete the tag
+        await remove(tagRef);
+      } else {
+        // Otherwise, update the tag with the remaining post IDs
+        await update(tagRef, { postIds: updatedPostIds });
+      }
+    }
+  } catch (error) {
+    return error;
   }
 };
