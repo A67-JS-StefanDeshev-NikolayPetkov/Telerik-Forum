@@ -384,6 +384,40 @@ export const searchPosts = async (queryText) => {
   }
 };
 
+//Can be reworked to combine with the above function and be flexible in many different cases. Must rework admin users to work with object that contains username and data in the same object, not as Object.entries() and then rework this function to omit the two search types
+export const searchUsers = async (searchBy = "username", searchValue) => {
+  try {
+    const snapshot = await get(ref(db, "users"));
+    if (snapshot.exists()) {
+      const users = snapshot.val();
+
+      let filteredUsers;
+
+      if (searchBy === "username") {
+        filteredUsers = Object.entries(users).filter((user) => {
+          console.log("username", user);
+          return user[0].toLowerCase().includes(searchValue.toLowerCase());
+        });
+      } else {
+        filteredUsers = Object.entries(users).filter((user) => {
+          console.log("else", user);
+          return user[1][searchBy]
+            .toLowerCase()
+            .includes(searchValue.toLowerCase());
+        });
+      }
+
+      console.log(filteredUsers);
+
+      return filteredUsers;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 /**
  *
  * @param {object} latestElement provide the last rendered object so that firebase can retrieve the next 10
@@ -489,6 +523,3 @@ export const removePostIdFromTag = async (tag, postId) => {
     return error;
   }
 };
-
-
-

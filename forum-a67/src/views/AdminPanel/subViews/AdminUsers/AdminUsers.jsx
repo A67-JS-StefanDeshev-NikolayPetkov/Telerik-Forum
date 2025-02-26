@@ -25,7 +25,7 @@ function AdminUsers({ users, handleScroll }) {
           />
         ))
       ) : (
-        <p>No users available</p>
+        <p>No users found</p>
       )}
     </div>
   );

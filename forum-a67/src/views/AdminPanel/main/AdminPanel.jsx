@@ -10,9 +10,13 @@ import ViewContainer from "../../../components/containers/ViewContainer/ViewCont
 import StandardCard from "../../../components/containers/StandardCard/StandardCard";
 import AdminUsers from "../subViews/AdminUsers/AdminUsers";
 import Loader from "../../../components/loader/Loader";
+import SubmitButton from "../../../components/SubmitButton/SubmitButton";
 
 //Services
-import { fetchForInfiniteScroll } from "../../../services/users.service";
+import {
+  fetchForInfiniteScroll,
+  searchUsers,
+} from "../../../services/users.service";
 
 function AdminPanel() {
   const { user, userData } = useContext(AppContext);
@@ -20,6 +24,10 @@ function AdminPanel() {
   const [error, setError] = useState(null);
   const [lastRenderedUser, setLastRenderedUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [searchBy, setSearchBy] = useState("username");
+  const [searchResult, setSearchResult] = useState([]);
+  const [searchCompleted, setSearchCompleted] = useState(false);
 
   function loadMoreUsers() {
     if (loading) return;
@@ -59,9 +67,53 @@ function AdminPanel() {
     }
   };
 
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    setSearchCompleted(false);
+    setLoading(true);
+
+    try {
+      const matchedUsers = await searchUsers(searchBy, searchValue);
+      setSearchResult(matchedUsers);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+      setSearchCompleted(true);
+    }
+  };
+
+  const cancelSearch = function () {
+    setSearchResult([]);
+    setSearchCompleted(false);
+  };
+
   useEffect(() => {
     loadMoreUsers();
   }, []);
+
+  const searchBarMarkup = (
+    <div className="search-users">
+      {searchCompleted && <button onClick={cancelSearch}></button>}
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          placeholder={`Enter user ${searchBy}`}
+          required
+        />
+        <select
+          value={searchBy}
+          onChange={(e) => setSearchBy(e.target.value)}
+        >
+          <option value="username">username</option>
+          <option value="email">email</option>
+        </select>
+        <SubmitButton label="Search" />
+      </form>
+    </div>
+  );
 
   //If not logged in or not an admin deny access
   if (!user || !userData.admin) return <p>Access denied.</p>;
@@ -76,8 +128,9 @@ function AdminPanel() {
 
       <StandardCard>
         <h3>Users</h3>
+        {searchBarMarkup}
         <AdminUsers
-          users={users}
+          users={searchCompleted ? searchResult : users}
           handleScroll={handleScroll}
         ></AdminUsers>
       </StandardCard>
