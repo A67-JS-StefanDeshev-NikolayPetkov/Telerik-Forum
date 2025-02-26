@@ -441,6 +441,11 @@ export const fetchForInfiniteScroll = async (
   }
 };
 
+export const updateUserDetails = async (username, updatedUser) => {
+  const userRef = ref(db, `users/${username}`);
+  await set(userRef, updatedUser);
+};
+
 // Add a function to add a tag to the tags collection
 export const addTag = async (tag, postId) => {
   const tagRef = ref(db, `tags/${tag.toLowerCase()}`);

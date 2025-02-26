@@ -16,7 +16,7 @@ import { createPostHandle } from "../../services/users.service";
 
 function CreatePost() {
   //State & context
-  const { user } = useContext(AppContext);
+  const { user, userData } = useContext(AppContext);
   const [formData, setFormData] = useState({
     postTitle: "",
     postBody: "",
@@ -68,6 +68,8 @@ function CreatePost() {
       navigate("/");
     }
   };
+
+  if (userData?.blocked) return <p>Your account is currently blocked. </p>;
 
   return (
     <ViewContainer>

@@ -59,7 +59,9 @@ function Profile() {
 
       <StandardCard>
         <ProfileNavigation username={username}></ProfileNavigation>
-        <Outlet context={{ username, displayUserData, isOwnProfile }} />
+        <Outlet
+          context={{ username, displayUserData, isOwnProfile, userData }}
+        />
       </StandardCard>
     </ViewContainer>
   );

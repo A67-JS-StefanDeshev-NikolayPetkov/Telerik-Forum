@@ -110,13 +110,15 @@ const WholePostView = () => {
         setCurrentUserLike={setCurrentUserLike}
         userData={userData}
       ></PostDetails>
-      <CreateComment
-        post={post}
-        postId={postId}
-        username={user.displayName}
-        setComments={setComments}
-        setCurrentUserLike={setCurrentUserLike}
-      />
+      {!userData?.blocked && (
+        <CreateComment
+          post={post}
+          postId={postId}
+          username={user.displayName}
+          setComments={setComments}
+          setCurrentUserLike={setCurrentUserLike}
+        />
+      )}
       <ViewComments
         comments={comments}
         commentCount={post.commentCount}
